@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,7 +10,6 @@ import {
   InputLabel,
   MenuItem,
   Box,
-  DialogActions,
 } from "@mui/material";
 import { SuccessAddColumn } from "./events/SuccessAddColumn";
 import { useSnackbar } from "notistack";

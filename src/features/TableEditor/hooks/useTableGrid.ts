@@ -8,33 +8,33 @@ export const useTableGrid = () => {
     (state) => state.tableMenu.activePanel
   );
 
-  const { table, rows } = useTableInfoContext();
+  const { table } = useTableInfoContext();
 
   const tableColumns = table.columns;
 
-  const convertRowsToGridRows = () => {
-    try {
-      return rows.map((row, rowIdx) => {
-        return row.reduce((acc, curr) => {
-          acc.id = rowIdx;
+  // const convertRowsToGridRows = () => {
+  //   try {
+  //     return rows.map((row, rowIdx) => {
+  //       return row.reduce((acc, curr) => {
+  //         acc.id = rowIdx;
 
-          acc[curr.columnName] = curr.data;
+  //         acc[curr.columnName] = curr.data;
 
-          return acc;
-        }, {} as Record<string, unknown>);
-      });
-    } catch {
-      return [];
-    }
-  };
+  //         return acc;
+  //       }, {} as Record<string, unknown>);
+  //     });
+  //   } catch {
+  //     return [];
+  //   }
+  // };
 
   const convertColsToGridCols = () => {
     try {
       const record: GridColDef[] = [];
 
-      tableColumns.forEach(({ name }) => {
+      tableColumns.forEach(({ id, name }) => {
         record.push({
-          field: name,
+          field: `${name}_${id}`,
           headerName: name,
           editable: true,
         });
@@ -46,13 +46,13 @@ export const useTableGrid = () => {
     }
   };
 
-  const gridRows = useMemo(() => {
-    return convertRowsToGridRows();
-  }, [rows]);
+  // const gridRows = useMemo(() => {
+  //   return convertRowsToGridRows();
+  // }, [rows]);
 
   const gridColumns: GridColDef[] = useMemo(() => {
     return convertColsToGridCols();
   }, [tableColumns, tableMenuActivePanel]);
 
-  return { gridColumns, gridRows };
+  return { gridColumns, gridRows: [] };
 };

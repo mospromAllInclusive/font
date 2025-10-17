@@ -1,7 +1,6 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, useEffect } from "react";
 import { List, ListItem, ListItemText, ListItemButton } from "@mui/material";
 import { useViewModel } from "./hooks/useViewModel";
-import { useLifecycles } from "react-use";
 import { SuccessAddColumn } from "../AddColumnAction";
 import { SuccessDeleteColumn } from "../DeleteColumnAction";
 import type { GetColumnDTO } from "@shared/network";
@@ -21,8 +20,6 @@ export const TableColumnList = ({
   const { enqueueSnackbar } = useSnackbar();
   const { palette } = useTheme();
 
-  console.log("tableId :>> ", tableId);
-
   const [columns, setColumns] = useState<GetColumnDTO[]>([]);
 
   const handleFetchColumns = async () => {
@@ -41,17 +38,20 @@ export const TableColumnList = ({
     setColumns(tableMeta.columns);
   };
 
-  useLifecycles(() => {
+  useEffect(() => {
     handleFetchColumns();
+
+    console.log("mount :>> ");
 
     window.addEventListener(SuccessAddColumn, handleFetchColumns);
     window.addEventListener(SuccessDeleteColumn, handleFetchColumns);
 
     return () => {
+      console.log("unmount");
       window.removeEventListener(SuccessAddColumn, handleFetchColumns);
       window.removeEventListener(SuccessDeleteColumn, handleFetchColumns);
     };
-  });
+  }, []);
 
   return (
     <List

@@ -7,7 +7,6 @@ import type { GetTableDataDTO } from "@shared/network";
 import { TableInfoProvider } from "@shared/context";
 import { TableColumnsEditor } from "../TableColumnsEditor";
 import { TableGridEditor } from "../TableGridEditor";
-import { SuccessAddColumn, SuccessDeleteColumn } from "@features";
 import type { TableMenuPanel } from "@shared/model";
 
 export const TableWorkArea = () => {
@@ -16,6 +15,8 @@ export const TableWorkArea = () => {
   const location = useLocation();
 
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
+
+  const tableName = tableInfo?.table?.name || "Неизвестная таблица";
 
   const handleUpdateTableInfo = async () => {
     const path = location.pathname;
@@ -44,16 +45,6 @@ export const TableWorkArea = () => {
     handleUpdateTableInfo();
   }, [location]);
 
-  useEffect(() => {
-    window.addEventListener(SuccessAddColumn, handleUpdateTableInfo);
-    window.addEventListener(SuccessDeleteColumn, handleUpdateTableInfo);
-
-    return () => {
-      window.removeEventListener(SuccessAddColumn, handleUpdateTableInfo);
-      window.removeEventListener(SuccessDeleteColumn, handleUpdateTableInfo);
-    };
-  }, [handleUpdateTableInfo]);
-
   return (
     <TableInfoProvider value={tableInfo}>
       <Box
@@ -67,9 +58,7 @@ export const TableWorkArea = () => {
         paddingBottom={2}
       >
         <Box className="TableWorkArea-header" marginTop="3px">
-          <Typography variant="h6">
-            {tableInfo?.name ? tableInfo.name : "Неизвестная таблица"}
-          </Typography>
+          <Typography variant="h6">{tableName}</Typography>
 
           <MenuTableWork
             activeValue={activePanel}
