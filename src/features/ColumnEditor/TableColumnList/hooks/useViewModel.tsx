@@ -1,9 +1,10 @@
 import { tableService } from "@shared/network";
 
 export const useViewModel = () => {
-  const fetchColumns = async (tableId: string) => {
-    return await tableService.getTableColumns(tableId);
+  const getTableMetaInfo = async (tableId: string) => {
+    console.log("tableId :>> ", tableId);
+    return await tableService.getTableMeta(tableId);
   };
 
-  return { fetchColumns };
+  return { getTableMetaInfo };
 };

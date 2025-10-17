@@ -93,63 +93,55 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
         ))}
       </DBTreeItem>
 
-      <Dialog
-        onClose={handleCloseDialog}
-        fullWidth
-        maxWidth="md"
-        open={openDialog}
-      >
+      <Dialog onClose={handleCloseDialog} open={openDialog}>
         <DialogTitle>Новая таблица</DialogTitle>
 
         <DialogContent>
-          <TextField
-            onChange={handleUpdateTableName}
-            fullWidth
-            sx={{ mt: 1 }}
-            label="Имя таблицы"
-          />
-
-          <Box mt={2} gap={2} display="flex" justifyContent="space-between">
-            <CreateTableButton
-              view="google-sheets"
-              selected={creationMethod === "google-sheets"}
-              onClick={() => handleSelectCreationMethod("google-sheets")}
+          <Box
+            component="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!isValid()) return;
+              handleCreateTable();
+            }}
+          >
+            <TextField
+              onChange={handleUpdateTableName}
+              fullWidth
+              sx={{ mt: 1 }}
+              label="Имя таблицы"
             />
 
-            <CreateTableButton
-              view="template-table"
-              selected={creationMethod === "template-table"}
-              onClick={() => handleSelectCreationMethod("template-table")}
-            />
+            <Box mt={2} gap={2} display="flex" justifyContent="center">
+              <CreateTableButton
+                view="excel-csv"
+                selected={creationMethod === "excel-csv"}
+                onClick={() => handleSelectCreationMethod("excel-csv")}
+              />
 
-            <CreateTableButton
-              view="excel-csv"
-              selected={creationMethod === "excel-csv"}
-              onClick={() => handleSelectCreationMethod("excel-csv")}
-            />
+              <CreateTableButton
+                view="blank-table"
+                selected={creationMethod === "blank-table"}
+                onClick={() => handleSelectCreationMethod("blank-table")}
+              />
+            </Box>
 
-            <CreateTableButton
-              view="blank-table"
-              selected={creationMethod === "blank-table"}
-              onClick={() => handleSelectCreationMethod("blank-table")}
-            />
+            <Box mt={4} display="flex" justifyContent="end">
+              <Button onClick={handleCloseDialog}>Закрыть</Button>
+
+              <Button
+                loading={isCreating}
+                type="submit"
+                variant="contained"
+                form="subscription-form"
+                disabled={!isValid()}
+                onClick={handleCreateTable}
+              >
+                Создать
+              </Button>
+            </Box>
           </Box>
         </DialogContent>
-
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Закрыть</Button>
-
-          <Button
-            loading={isCreating}
-            type="submit"
-            variant="contained"
-            form="subscription-form"
-            onClick={handleCreateTable}
-            disabled={!isValid()}
-          >
-            Создать
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

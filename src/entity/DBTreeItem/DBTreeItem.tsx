@@ -7,6 +7,7 @@ import { TbUsers } from "react-icons/tb";
 import type { TreeItemProps } from "@mui/x-tree-view";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddIcon from "@mui/icons-material/Add";
 
 const iconMatcher = {
   database: <FaDatabase color={mainVioletColor} />,
@@ -32,31 +33,12 @@ export const DBTreeItem = ({
   iconKey,
   showOptions = true,
   onAddEntity,
-  onDeleteEntity,
   ...props
 }: DBTreeItemProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const handleOpenMenu = (e: MouseEvent<HTMLElement>) => {
+  const handleAdd = (e: MouseEvent) => {
     e.stopPropagation();
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleAdd = () => {
     onAddEntity?.(`${iconKey}_add`);
-    setAnchorEl(null);
   };
-
-  const handleDeleteEntity = () => {
-    onDeleteEntity?.(`${iconKey}_delete`);
-    setAnchorEl(null);
-  };
-
-  const isMenuOpened = Boolean(anchorEl);
 
   return (
     <TreeItem
@@ -75,21 +57,11 @@ export const DBTreeItem = ({
               datatype="not-expand-tree"
               className="item-option-btn"
               size="small"
-              onClick={handleOpenMenu}
+              onClick={handleAdd}
             >
-              <MoreVertIcon fontSize="small" />
+              <AddIcon fontSize="inherit" />
             </IconButton>
           )}
-
-          <Menu
-            open={isMenuOpened}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MenuItem onClick={handleAdd}>Добавить</MenuItem>
-            <MenuItem onClick={handleDeleteEntity}>Удалить</MenuItem>
-          </Menu>
         </>
       }
     >

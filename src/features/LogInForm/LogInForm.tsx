@@ -78,7 +78,7 @@ export const LogInForm = () => {
         type="password"
       />
 
-      <Box width="100%" display="flex" justifyContent="end">
+      <Box width="100%" display="flex" justifyContent="end" gap={2}>
         <Button loading={isLoading} type="submit" variant="contained">
           Войти
         </Button>

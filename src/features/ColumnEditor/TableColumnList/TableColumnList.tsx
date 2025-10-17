@@ -17,14 +17,16 @@ export const TableColumnList = ({
   tableId,
   itemActionSlot,
 }: TableColumnListProps) => {
-  const { fetchColumns } = useViewModel();
+  const { getTableMetaInfo } = useViewModel();
   const { enqueueSnackbar } = useSnackbar();
   const { palette } = useTheme();
+
+  console.log("tableId :>> ", tableId);
 
   const [columns, setColumns] = useState<GetColumnDTO[]>([]);
 
   const handleFetchColumns = async () => {
-    const response = await fetchColumns(tableId);
+    const response = await getTableMetaInfo(tableId);
 
     if (response.error) {
       setColumns([]);
@@ -34,7 +36,9 @@ export const TableColumnList = ({
       return;
     }
 
-    setColumns(response.data);
+    const tableMeta = response.data;
+
+    setColumns(tableMeta.columns);
   };
 
   useLifecycles(() => {

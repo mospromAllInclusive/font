@@ -1,16 +1,8 @@
 import type { GetTreeTableDTO } from "./GetTreeTableDTO";
-import type { GetTreeQueryDTO } from "./GetTreeQueryDTO";
 
 export type GetTreeDatabaseDTO = {
   id: string;
-
   name: string;
-
+  role: "admin";
   tables: GetTreeTableDTO[];
-
-  users: [];
-
-  queries: GetTreeQueryDTO[];
-
-  paticipants: [];
 };

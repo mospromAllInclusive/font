@@ -64,9 +64,8 @@ export const DatabaseTreeView = () => {
             itemId={`/paticipant-list/${db.id}`}
             iconKey="paticipant"
             label="Участники"
+            showOptions={false}
           />
-
-          <DBTreeItem itemId={`/chat/${db.id}`} iconKey="chat" label="Чат" />
         </DBTreeItem>
       ))}
     </SimpleTreeView>

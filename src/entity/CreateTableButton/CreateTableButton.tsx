@@ -33,10 +33,11 @@ export const CreateTableButton = ({
     <Button
       sx={{
         width: "200px",
-        height: "88px",
+        height: "100px",
         display: "flex",
         flexDirection: "column",
         gap: 1,
+        paddingTop: "16px",
         border: "1px solid rgb(169 162 168 / 1)",
       }}
       variant={selected ? "contained" : "outlined"}

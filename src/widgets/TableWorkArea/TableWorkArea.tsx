@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { MenuTableWork } from "@entity";
 import { useLocation } from "react-router-dom";
 import { useViewModel } from "./hooks/useViewModel";
-import type { GetTableDTO } from "src/shared/network/dto/GetTableDTO";
+import type { GetTableDataDTO } from "@shared/network";
 import { TableInfoProvider } from "@shared/context";
 import { TableColumnsEditor } from "../TableColumnsEditor";
 import { TableGridEditor } from "../TableGridEditor";
@@ -15,7 +15,7 @@ export const TableWorkArea = () => {
 
   const location = useLocation();
 
-  const [tableInfo, setTableInfo] = useState<GetTableDTO | null>(null);
+  const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
 
   const handleUpdateTableInfo = async () => {
     const path = location.pathname;

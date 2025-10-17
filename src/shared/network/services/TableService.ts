@@ -1,33 +1,44 @@
 import { network } from "../shared/network";
 import type { AxiosError } from "axios";
-import { type GetColumnDTO } from "../dto/GetColumnDTO";
-import { type GetTableDTO } from "../dto/GetTableDTO";
+import type { GetColumnDTO } from "../dto/table/GetColumnDTO";
+import type { GetTableDataDTO } from "../dto/table/GetTableDataDTO";
+import type { GetTableMetaDTO } from "../dto/table/GetTableMetaDTO";
 import { type Response } from "../shared/Response";
 
 class TableService {
-  async getTable(tableId: string): Promise<Response<GetTableDTO>> {
+  async getTable(tableId: string): Promise<Response<GetTableDataDTO>> {
     try {
-      const { data } = await network.get(`/table/${tableId}`);
+      const { data } = await network.get(`/tables/${tableId}`);
       return { data, error: null };
     } catch (error) {
       return { data: null, error: error as AxiosError };
     }
   }
 
-  async getTableColumns(tableId: string): Promise<Response<GetColumnDTO[]>> {
+  async getTableMeta(tableId: string): Promise<Response<GetTableMetaDTO>> {
     try {
-      const { data } = await network.get(`/table/${tableId}/columns`);
+      const { data } = await network.get(`/tables/${tableId}/info`);
       return { data, error: null };
     } catch (error) {
       return { data: null, error: error as AxiosError };
     }
   }
+
+  // async getTableColumns(tableId: string): Promise<Response<GetColumnDTO[]>> {
+  //   try {
+  //     const { data } = await network.get(`/tables/${tableId}/info`);
+  //     return { data, error: null };
+  //   } catch (error) {
+  //     return { data: null, error: error as AxiosError };
+  //   }
+  // }
 
   async addEmptyTableToDatabase(tableName: string, dbId: string) {
     try {
-      const { data } = await network.post(`/table`, {
-        tableName,
-        dbId,
+      const { data } = await network.post(`/tables/create`, {
+        name: tableName,
+        database_id: dbId,
+        columns: [],
       });
 
       return { data, error: null };

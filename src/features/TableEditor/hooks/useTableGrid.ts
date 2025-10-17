@@ -8,33 +8,51 @@ export const useTableGrid = () => {
     (state) => state.tableMenu.activePanel
   );
 
-  const { columns, rows } = useTableInfoContext();
+  const { table, rows } = useTableInfoContext();
+
+  const tableColumns = table.columns;
+
+  const convertRowsToGridRows = () => {
+    try {
+      return rows.map((row, rowIdx) => {
+        return row.reduce((acc, curr) => {
+          acc.id = rowIdx;
+
+          acc[curr.columnName] = curr.data;
+
+          return acc;
+        }, {} as Record<string, unknown>);
+      });
+    } catch {
+      return [];
+    }
+  };
+
+  const convertColsToGridCols = () => {
+    try {
+      const record: GridColDef[] = [];
+
+      tableColumns.forEach(({ name }) => {
+        record.push({
+          field: name,
+          headerName: name,
+          editable: true,
+        });
+      });
+
+      return record;
+    } catch {
+      return [];
+    }
+  };
 
   const gridRows = useMemo(() => {
-    return rows.map((row, rowIdx) => {
-      return row.reduce((acc, curr) => {
-        acc.id = rowIdx;
-
-        acc[curr.columnName] = curr.data;
-
-        return acc;
-      }, {} as Record<string, unknown>);
-    });
+    return convertRowsToGridRows();
   }, [rows]);
 
   const gridColumns: GridColDef[] = useMemo(() => {
-    const record: GridColDef[] = [];
-
-    columns.forEach(({ name }) => {
-      record.push({
-        field: name,
-        headerName: name,
-        editable: true,
-      });
-    });
-
-    return record;
-  }, [columns, tableMenuActivePanel]);
+    return convertColsToGridCols();
+  }, [tableColumns, tableMenuActivePanel]);
 
   return { gridColumns, gridRows };
 };

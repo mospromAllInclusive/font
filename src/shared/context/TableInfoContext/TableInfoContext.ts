@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
-import type { GetTableDTO } from "../../network/dto/GetTableDTO";
+import type { GetTableDataDTO } from "@shared/network";
 
-const TableInfoContext = createContext<GetTableDTO | null>(null);
+const TableInfoContext = createContext<GetTableDataDTO | null>(null);
 
 export const TableInfoProvider = TableInfoContext.Provider;
 

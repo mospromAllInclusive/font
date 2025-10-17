@@ -16,13 +16,13 @@ export const TableColumnsEditor = (boxProps: BoxProps) => {
       flexDirection="column"
       {...boxProps}
     >
-      <AddColumnAction tableId={tableInfo.id} />
+      <AddColumnAction tableId={tableInfo.table.id} />
 
       <TableColumnList
-        key={tableInfo.id}
-        tableId={tableInfo.id}
+        key={tableInfo.table.id}
+        tableId={tableInfo.table.id}
         itemActionSlot={(column) => (
-          <DeleteColumnAction tableId={tableInfo.id} {...column} />
+          <DeleteColumnAction tableId={tableInfo.table.id} {...column} />
         )}
       />
     </Box>
