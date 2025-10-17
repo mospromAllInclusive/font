@@ -16,4 +16,16 @@ export default defineConfig({
       "@shared/context": path.resolve(__dirname, "src/shared/context"),
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://server.simple-table.ru",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => {
+          return path.replace(/^\/api/, "");
+        },
+      },
+    },
+  },
 });

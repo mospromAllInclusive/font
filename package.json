@@ -20,6 +20,7 @@
     "@mui/x-tree-view": "^8.14.0",
     "@reduxjs/toolkit": "^2.9.0",
     "axios": "^1.12.2",
+    "camelcase-keys": "^10.0.0",
     "classnames": "^2.5.1",
     "express": "^5.1.0",
     "notistack": "^3.0.2",

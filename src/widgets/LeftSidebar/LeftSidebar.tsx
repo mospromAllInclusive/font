@@ -3,8 +3,11 @@ import type { BoxProps } from "@mui/material";
 import { UserLogo } from "@entity";
 import { DatabaseTreeView } from "@features";
 import { AddDBAction } from "@features";
+import { useViewModel } from "./hooks/useViewModel";
 
 export const LeftSidebar = (props: BoxProps) => {
+  const { userName } = useViewModel();
+
   return (
     <Box
       width="100%"
@@ -17,7 +20,7 @@ export const LeftSidebar = (props: BoxProps) => {
       {...props}
     >
       <UserLogo
-        name="Victor Trumpel"
+        name={userName}
         src="https://v6.mui.com/static/images/avatar/1.jpg"
       />
 
