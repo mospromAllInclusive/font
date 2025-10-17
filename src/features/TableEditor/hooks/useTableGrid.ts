@@ -8,9 +8,9 @@ export const useTableGrid = () => {
     (state) => state.tableMenu.activePanel
   );
 
-  const { table } = useTableInfoContext();
+  // const { table } = useTableInfoContext();
 
-  const tableColumns = table.columns;
+  const tableColumns = [];
 
   // const convertRowsToGridRows = () => {
   //   try {
@@ -30,17 +30,17 @@ export const useTableGrid = () => {
 
   const convertColsToGridCols = () => {
     try {
-      const record: GridColDef[] = [];
+      // const record: GridColDef[] = [];
 
-      tableColumns.forEach(({ id, name }) => {
-        record.push({
-          field: `${name}_${id}`,
-          headerName: name,
-          editable: true,
-        });
-      });
+      // tableColumns.forEach(({ id, name }) => {
+      //   record.push({
+      //     field: `${name}_${id}`,
+      //     headerName: name,
+      //     editable: true,
+      //   });
+      // });
 
-      return record;
+      return [];
     } catch {
       return [];
     }
@@ -50,9 +50,9 @@ export const useTableGrid = () => {
   //   return convertRowsToGridRows();
   // }, [rows]);
 
-  const gridColumns: GridColDef[] = useMemo(() => {
-    return convertColsToGridCols();
-  }, [tableColumns, tableMenuActivePanel]);
+  // const gridColumns: GridColDef[] = useMemo(() => {
+  //   return convertColsToGridCols();
+  // }, [tableColumns, tableMenuActivePanel]);
 
-  return { gridColumns, gridRows: [] };
+  return { gridColumns: [], gridRows: [] };
 };

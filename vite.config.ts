@@ -14,6 +14,7 @@ export default defineConfig({
       "@shared/model": path.resolve(__dirname, "src/shared/model"),
       "@shared/theme": path.resolve(__dirname, "src/shared/theme"),
       "@shared/context": path.resolve(__dirname, "src/shared/context"),
+      "@shared/utils": path.resolve(__dirname, "src/shared/utils"),
     },
   },
   server: {

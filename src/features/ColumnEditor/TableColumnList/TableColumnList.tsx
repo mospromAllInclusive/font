@@ -10,6 +10,7 @@ import { useSnackbar } from "notistack";
 type TableColumnListProps = {
   tableId: string;
   itemActionSlot: (column: GetColumnDTO) => ReactNode;
+  defaultColumns: GetColumnDTO[];
 };
 
 export const TableColumnList = ({
@@ -41,13 +42,10 @@ export const TableColumnList = ({
   useEffect(() => {
     handleFetchColumns();
 
-    console.log("mount :>> ");
-
     window.addEventListener(SuccessAddColumn, handleFetchColumns);
     window.addEventListener(SuccessDeleteColumn, handleFetchColumns);
 
     return () => {
-      console.log("unmount");
       window.removeEventListener(SuccessAddColumn, handleFetchColumns);
       window.removeEventListener(SuccessDeleteColumn, handleFetchColumns);
     };

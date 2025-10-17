@@ -8,7 +8,7 @@ export const TableInfoProvider = TableInfoContext.Provider;
 export const useTableInfoContext = () => {
   const context = useContext(TableInfoContext);
 
-  if (!context) throw new Error("Missed TableInfoContext!");
+  // if (!context) throw new Error("Missed TableInfoContext!");
 
   return context;
 };

@@ -7,13 +7,13 @@ export const useViewModel = () => {
   const dispath = useAppDispatch();
   const activePanel = useAppSelector((state) => state.tableMenu.activePanel);
 
-  const getTable = async (tableId: string) => {
-    return await tableService.getTable(tableId);
+  const getTableInfo = async (tableId: string) => {
+    return await tableService.getTableMeta(tableId);
   };
 
   const setTableMenuActivePanel = (panel: TableMenuPanel) => {
     dispath(tableMenuActions.setActivePanel(panel));
   };
 
-  return { activePanel, getTable, setTableMenuActivePanel };
+  return { activePanel, getTableInfo, setTableMenuActivePanel };
 };

@@ -1,21 +1,32 @@
-import { useMemo } from "react";
-import { DataGrid, type GridRowId } from "@mui/x-data-grid";
+import { useMemo, useEffect, useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
 import { useViewModel } from "./hooks/useViewModel";
-import { useTableGrid } from "./hooks/useTableGrid";
+import type { GetTableDataDTO } from "@shared/network";
 
-export const TableEditor = () => {
-  const { selectedRowIds, handleSetSelectedRows } = useViewModel();
+export const TableEditor = ({ tableId }: { tableId: string }) => {
+  const { selectedRowIds, fetchTableData } = useViewModel();
 
-  const { gridColumns, gridRows } = useTableGrid();
+  const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
 
-  const handleSelectRow = (selectedIds: Set<GridRowId>) => {
-    handleSetSelectedRows(selectedIds);
+  const handleUpdateTableInfo = async () => {
+    const response = await fetchTableData(tableId);
+
+    if (response.error) {
+      setTableInfo(null);
+      return;
+    }
+
+    setTableInfo(response.data);
   };
 
   const selectedRowIdsSet = useMemo(
     () => new Set(selectedRowIds),
     [selectedRowIds]
   );
+
+  useEffect(() => {
+    handleUpdateTableInfo();
+  }, [location]);
 
   return (
     <DataGrid
@@ -26,10 +37,9 @@ export const TableEditor = () => {
       showCellVerticalBorder
       showColumnVerticalBorder
       rowSelectionModel={{ type: "include", ids: selectedRowIdsSet }}
-      onRowSelectionModelChange={({ ids }) => handleSelectRow(ids)}
       sx={{ width: "100%", borderRadius: "8px" }}
-      rows={gridRows}
-      columns={gridColumns}
+      rows={[]}
+      columns={[]}
     />
   );
 };

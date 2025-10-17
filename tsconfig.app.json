@@ -32,7 +32,8 @@
       "@shared/network": ["src/shared/network/index.ts"],
       "@shared/model": ["src/shared/model/index.ts"],
       "@shared/theme": ["src/shared/theme/index.ts"],
-      "@shared/context": ["src/shared/context/index.ts"]
+      "@shared/context": ["src/shared/context/index.ts"],
+      "@shared/utils": ["src/shared/utils/index.ts"]
     }
   },
   "include": ["src"]

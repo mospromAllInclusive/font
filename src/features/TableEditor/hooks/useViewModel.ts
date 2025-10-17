@@ -1,6 +1,7 @@
 import type { GridRowId } from "@mui/x-data-grid";
 import { tableActions } from "@shared/model";
 import { useAppDispatch, useAppSelector } from "@shared/model";
+import { tableService } from "@shared/network";
 
 export const useViewModel = () => {
   const dispatch = useAppDispatch();
@@ -10,5 +11,9 @@ export const useViewModel = () => {
     dispatch(tableActions.setSelectedRows([...ids]));
   };
 
-  return { selectedRowIds, handleSetSelectedRows };
+  const fetchTableData = async (tableId: string) => {
+    return await tableService.getTable(tableId);
+  };
+
+  return { selectedRowIds, fetchTableData, handleSetSelectedRows };
 };

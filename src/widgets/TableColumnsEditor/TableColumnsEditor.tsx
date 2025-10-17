@@ -4,11 +4,11 @@ import {
   TableColumnList,
   DeleteColumnAction,
 } from "@features";
-import { useTableInfoContext } from "@shared/context";
 
-export const TableColumnsEditor = (boxProps: BoxProps) => {
-  const tableInfo = useTableInfoContext();
-
+export const TableColumnsEditor = ({
+  tableId,
+  ...boxProps
+}: BoxProps & { tableId: string }) => {
   return (
     <Box
       display="flex"
@@ -16,13 +16,13 @@ export const TableColumnsEditor = (boxProps: BoxProps) => {
       flexDirection="column"
       {...boxProps}
     >
-      <AddColumnAction tableId={tableInfo.table.id} />
+      <AddColumnAction tableId={tableId} />
 
       <TableColumnList
-        key={tableInfo.table.id}
-        tableId={tableInfo.table.id}
+        key={tableId}
+        tableId={tableId}
         itemActionSlot={(column) => (
-          <DeleteColumnAction tableId={tableInfo.table.id} {...column} />
+          <DeleteColumnAction tableId={tableId} {...column} />
         )}
       />
     </Box>
