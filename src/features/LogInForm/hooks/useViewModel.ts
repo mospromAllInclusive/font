@@ -1,8 +1,7 @@
 import { userService, network } from "@shared/network";
+import { useAppDispatch, userInfoActions } from "@shared/model";
 import type { CreateUserDTO } from "@shared/network";
 import type { GetUserDTO } from "src/shared/network/dto/GetUserDTO";
-import { useAppDispatch } from "@shared/model";
-import { userInfoActions } from "@shared/model";
 
 export const useViewModel = () => {
   const dispatch = useAppDispatch();

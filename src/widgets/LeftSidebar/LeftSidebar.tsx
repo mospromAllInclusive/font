@@ -1,12 +1,13 @@
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, IconButton } from "@mui/material";
 import type { BoxProps } from "@mui/material";
 import { UserLogo } from "@entity";
-import { DatabaseTreeView } from "@features";
-import { AddDBAction } from "@features";
+import { AddDBAction, DatabaseTreeView } from "@features";
 import { useViewModel } from "./hooks/useViewModel";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { mainVioletColor } from "@shared";
 
 export const LeftSidebar = (props: BoxProps) => {
-  const { userName } = useViewModel();
+  const { userName, handleLogOut } = useViewModel();
 
   return (
     <Box
@@ -19,10 +20,16 @@ export const LeftSidebar = (props: BoxProps) => {
       }}
       {...props}
     >
-      <UserLogo
-        name={userName}
-        src="https://v6.mui.com/static/images/avatar/1.jpg"
-      />
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <UserLogo
+          name={userName}
+          src="https://v6.mui.com/static/images/avatar/1.jpg"
+        />
+
+        <IconButton size="small" onClick={handleLogOut}>
+          <LogoutIcon fontSize="inherit" sx={{ color: mainVioletColor }} />
+        </IconButton>
+      </Box>
 
       <Divider sx={{ mt: 2, mb: 2 }} />
 
