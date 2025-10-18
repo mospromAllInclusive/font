@@ -38,6 +38,21 @@ class TableService {
     }
   }
 
+  async addTableViaFile(dbId: string, tableName: string, file: File) {
+    try {
+      const formData = new FormData();
+      formData.set("database_id", dbId);
+      formData.set("table_name", tableName);
+      formData.set("file", file);
+
+      const { data } = await network.post(`/tables/import`, formData);
+
+      return { data: camelcaseKeys(data), error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
+
   async deleteTable(tableId: string) {
     try {
       const { data } = await network.post(`/tables/delete`, {

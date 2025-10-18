@@ -5,5 +5,13 @@ export const useViewModel = () => {
     return await tableService.addEmptyTableToDatabase(tableName, dbId);
   };
 
-  return { addTable };
+  const addTableViaFile = async (
+    dbId: string,
+    tableName: string,
+    file: File
+  ) => {
+    return await tableService.addTableViaFile(dbId, tableName, file);
+  };
+
+  return { addTable, addTableViaFile };
 };

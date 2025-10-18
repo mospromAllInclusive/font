@@ -63,7 +63,13 @@ export const PaticipantOfDB = () => {
       </Typography>
 
       <Box flex="1" paddingTop={4}>
-        <DataGrid loading={isLoading} columns={columns} rows={gridRows} />
+        <DataGrid
+          loading={isLoading}
+          showCellVerticalBorder
+          showColumnVerticalBorder
+          columns={columns}
+          rows={gridRows}
+        />
       </Box>
     </Box>
   );

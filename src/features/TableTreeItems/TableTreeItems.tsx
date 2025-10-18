@@ -1,10 +1,11 @@
-import { useState, type ChangeEvent } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 import type { GetTreeTableDTO } from "@shared/network";
 import {
   DBTreeItem,
   CreateTableButton,
   type CrateTableButtonProps,
 } from "@entity";
+import { VisuallyHiddenInput } from "@shared";
 import { TableTreeItem } from "../TableTreeItem/TableTreeItem";
 import {
   Dialog,
@@ -14,8 +15,10 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import { RiFileExcel2Fill } from "react-icons/ri";
 import { useViewModel } from "./hooks/useViewModel";
 import { SuccessAddTable } from "./events/SuccessAddTable";
+import type { Response } from "@shared/network";
 
 type TableTreeItemsProps = {
   dbId: string;
@@ -25,7 +28,7 @@ type TableTreeItemsProps = {
 type CreationMethod = CrateTableButtonProps["view"];
 
 export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
-  const { addTable } = useViewModel();
+  const { addTable, addTableViaFile } = useViewModel();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -33,19 +36,35 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
   const [creationMethod, setCreationMethod] = useState<CreationMethod | null>(
     null
   );
+  const [file, setFile] = useState<File | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
+  };
+
+  const resetFilesInput = () => {
+    setFile(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.files = null;
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setTableName("");
     setCreationMethod(null);
+
+    resetFilesInput();
   };
 
   const handleSelectCreationMethod = (method: CreationMethod) => {
     setCreationMethod(method);
+
+    resetFilesInput();
   };
 
   const handleUpdateTableName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +74,13 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
   const handleCreateTable = async () => {
     setIsCreating(true);
 
-    const response = await addTable(dbId, tableName);
+    let response: Response<unknown>;
+
+    if (file) {
+      response = await addTableViaFile(dbId, tableName, file);
+    } else {
+      response = await addTable(dbId, tableName);
+    }
 
     if (response.error) {
       setIsCreating(false);
@@ -69,9 +94,16 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
     handleCloseDialog();
   };
 
+  const handleSelectFile = (fileList: FileList | null) => {
+    if (!fileList) return;
+    const file = fileList[0];
+    setFile(file);
+    setCreationMethod(null);
+  };
+
   const isValid = () => {
     if (!tableName) return false;
-    if (!creationMethod) return false;
+    if (!creationMethod && !file) return false;
     return true;
   };
 
@@ -112,11 +144,28 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
             />
 
             <Box mt={2} gap={2} display="flex" justifyContent="center">
-              <CreateTableButton
-                view="excel-csv"
-                selected={creationMethod === "excel-csv"}
-                onClick={() => handleSelectCreationMethod("excel-csv")}
-              />
+              <Button
+                component="label"
+                variant={file ? "contained" : "outlined"}
+                sx={{
+                  width: "200px",
+                  height: "100px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
+                  paddingTop: "16px",
+                  border: "1px solid rgb(169 162 168 / 1)",
+                }}
+              >
+                <RiFileExcel2Fill transform="scale(2)" />
+                Excel/CSV
+                <VisuallyHiddenInput
+                  accept=".xls, .csv, .xlsx"
+                  ref={fileInputRef}
+                  onChange={(event) => handleSelectFile(event.target.files)}
+                  type="file"
+                />
+              </Button>
 
               <CreateTableButton
                 view="blank-table"
