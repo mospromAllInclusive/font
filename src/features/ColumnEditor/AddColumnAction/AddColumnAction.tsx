@@ -121,9 +121,9 @@ export const AddColumnAction = ({
                 onChange={(e) => handleUpdateColType(e.target.value)}
                 label="Тип колонки"
               >
-                <MenuItem value="Short-text">Текст</MenuItem>
-                <MenuItem value="Number">Число</MenuItem>
-                <MenuItem value="Email">Email</MenuItem>
+                <MenuItem value="text">Текст</MenuItem>
+                <MenuItem value="numeric">Число</MenuItem>
+                <MenuItem value="enum">Выбор из предложенных</MenuItem>
               </Select>
             </FormControl>
 

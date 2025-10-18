@@ -6,10 +6,22 @@ import { type Response } from "../shared/Response";
 import camelcaseKeys from "camelcase-keys";
 
 class TableService {
-  async getTable(tableId: string): Promise<Response<GetTableDataDTO>> {
+  async getTable(
+    tableId: string,
+    pagination: { page: number; pageSize: number }
+  ): Promise<Response<GetTableDataDTO>> {
+    const { page, pageSize } = pagination;
     try {
-      const { data } = await network.get(`/tables/${tableId}`);
-      return { data: camelcaseKeys(data), error: null };
+      const { data } = await network.get(`/tables/${tableId}`, {
+        params: {
+          page,
+          perPage: pageSize,
+        },
+      });
+      return {
+        data: { ...data, table: camelcaseKeys(data.table, { deep: true }) },
+        error: null,
+      };
     } catch (error) {
       return { data: null, error: error as AxiosError };
     }

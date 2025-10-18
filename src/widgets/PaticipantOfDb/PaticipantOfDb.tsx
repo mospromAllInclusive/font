@@ -45,8 +45,6 @@ export const PaticipantOfDB = () => {
     handleUpdateUserList();
   }, [location]);
 
-  console.log("userList :>> ", userList);
-
   return (
     <Box
       paddingLeft={2}

@@ -2,6 +2,7 @@ import type { GridRowId } from "@mui/x-data-grid";
 import { tableActions } from "@shared/model";
 import { useAppDispatch, useAppSelector } from "@shared/model";
 import { tableService } from "@shared/network";
+import type { PaginationMeta } from "./useNavigationMeta";
 
 export const useViewModel = () => {
   const dispatch = useAppDispatch();
@@ -11,8 +12,11 @@ export const useViewModel = () => {
     dispatch(tableActions.setSelectedRows([...ids]));
   };
 
-  const fetchTableData = async (tableId: string) => {
-    return await tableService.getTable(tableId);
+  const fetchTableData = async (
+    tableId: string,
+    paginationMeta: PaginationMeta
+  ) => {
+    return await tableService.getTable(tableId, paginationMeta);
   };
 
   const updateTableCell = async (

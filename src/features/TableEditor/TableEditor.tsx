@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DataGrid,
   GridFooterContainer,
@@ -6,24 +6,35 @@ import {
 } from "@mui/x-data-grid";
 import { AddRowAction } from "../AddRowAction";
 import { useViewModel } from "./hooks/useViewModel";
-import { useLifecycles } from "react-use";
 import { Box, Button } from "@mui/material";
 import { SuccessAddRowEvent } from "../AddRowAction";
+import { useTableGrid } from "./hooks/useTableGrid";
 import type { GetTableDataDTO } from "@shared/network";
-import type { GridColDef, GridRowId, GridRowsProp } from "@mui/x-data-grid";
-import { useSnackbar } from "notistack";
+import { RowsDeleteEvent } from "./events/RowsDeleteEvent";
+import { useRowChange } from "./hooks/useRowChange";
+import { useNavigationMeta } from "./hooks/useNavigationMeta";
+import { TablePaginator } from "@entity";
 
 export const TableEditor = ({ tableId }: { tableId: string }) => {
-  const { fetchTableData, updateTableCell, deleteRows } = useViewModel();
-  const { enqueueSnackbar } = useSnackbar();
+  const { fetchTableData } = useViewModel();
 
   const [isLoading, setIsLoading] = useState(false);
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
-  const [selectedRows, setSelectedRows] = useState<Set<GridRowId>>(new Set());
+
+  const { paginationMeta, setPaginationMeta } = useNavigationMeta();
+
+  const { gridColumns, gridRows } = useTableGrid(tableInfo);
+
+  const {
+    selectedRows,
+    handleDeleteRows: deleteRows,
+    handleRowUpdate,
+    handleSelectRows,
+  } = useRowChange(tableId);
 
   const handleUpdateTableInfo = async () => {
     setIsLoading(true);
-    const response = await fetchTableData(tableId);
+    const response = await fetchTableData(tableId, paginationMeta);
     setIsLoading(false);
 
     if (response.error) {
@@ -34,100 +45,23 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
     setTableInfo(response.data);
   };
 
-  const handleSelectRows = (selectedSet: Set<GridRowId>) => {
-    setSelectedRows(selectedSet);
-  };
-
   const handleDeleteRows = async () => {
     setIsLoading(true);
-
-    const response = await deleteRows(tableId, [...selectedRows]);
-
-    setSelectedRows(new Set());
-
+    await deleteRows();
     setIsLoading(false);
+  };
 
-    if (response.error) {
-      enqueueSnackbar("Не все строки были удалены успешно!", {
-        variant: "error",
-      });
-
-      handleUpdateTableInfo();
-
-      return;
-    }
-
-    enqueueSnackbar("Строки успешно удалены!", {
-      variant: "success",
-    });
-
+  useEffect(() => {
     handleUpdateTableInfo();
-  };
 
-  const handleRowUpdate = async (newRowObj: unknown, oldRowObj: unknown) => {
-    const newRow = newRowObj as Record<string, unknown>;
-    const oldRow = oldRowObj as Record<string, unknown>;
+    window.addEventListener(SuccessAddRowEvent, handleUpdateTableInfo);
+    window.addEventListener(RowsDeleteEvent, handleUpdateTableInfo);
 
-    const colNames = Object.keys(newRow);
-
-    for (const colId of colNames) {
-      if (newRow[colId] === oldRow[colId]) continue;
-
-      const response = await updateTableCell(
-        tableId,
-        newRow.id as string,
-        colId,
-        newRow[colId]
-      );
-
-      if (response.error) {
-        enqueueSnackbar("Ошибка изменения ячейки!", { variant: "error" });
-        return oldRow;
-      }
-    }
-
-    return newRow as Record<string, unknown>;
-  };
-
-  const gridColumns: GridColDef[] = useMemo(() => {
-    if (!tableInfo) return [];
-
-    const columns = tableInfo.table.columns.map((col) => {
-      return {
-        field: col.id,
-        headerName: col.name,
-        editable: true,
-      };
-    });
-
-    return columns;
-  }, [tableInfo]);
-
-  const gridRows: GridRowsProp[] = useMemo(() => {
-    if (!tableInfo) return [];
-
-    const record: GridRowsProp[] = [];
-
-    tableInfo.rows.forEach((row) => {
-      record.push({
-        id: row.id,
-        ...row.data,
-      } as unknown as GridRowsProp);
-    });
-
-    return record;
-  }, [tableInfo]);
-
-  useLifecycles(
-    () => {
-      handleUpdateTableInfo();
-
-      window.addEventListener(SuccessAddRowEvent, handleUpdateTableInfo);
-    },
-    () => {
+    return () => {
       window.removeEventListener(SuccessAddRowEvent, handleUpdateTableInfo);
-    }
-  );
+      window.removeEventListener(RowsDeleteEvent, handleUpdateTableInfo);
+    };
+  }, [paginationMeta]);
 
   return (
     <DataGrid
@@ -146,6 +80,12 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       rows={gridRows}
       loading={isLoading}
       columns={gridColumns}
+      autosizeOptions={{
+        includeOutliers: true,
+        includeHeaders: true,
+        outliersFactor: 1.5,
+        expand: true,
+      }}
       slots={{
         footer: () => (
           <GridFooterContainer>
@@ -167,7 +107,14 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
               )}
             </Box>
 
-            <GridPagination />
+            {tableInfo && (
+              <TablePaginator
+                page={paginationMeta.page}
+                pageSize={paginationMeta.pageSize}
+                totalItems={tableInfo.table.totalRows}
+                onChangePaginationMeta={setPaginationMeta}
+              />
+            )}
           </GridFooterContainer>
         ),
       }}
