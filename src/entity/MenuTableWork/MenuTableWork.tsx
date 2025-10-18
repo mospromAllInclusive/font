@@ -3,15 +3,20 @@ import { FaDatabase } from "react-icons/fa6";
 import { MdViewColumn } from "react-icons/md";
 import { MenuTab } from "./ui/MenuTab";
 import type { TableMenuPanel } from "@shared/model";
+import RestorePageIcon from "@mui/icons-material/RestorePage";
 
 export type MenuTableWorkProps = {
+  activeHistoryMenu: boolean;
   activeValue: TableMenuPanel;
   onSelectTab: (value: TableMenuPanel) => void;
+  onToggleMenuHistory: () => void;
 };
 
 export const MenuTableWork = ({
+  activeHistoryMenu,
   activeValue,
   onSelectTab,
+  onToggleMenuHistory,
 }: MenuTableWorkProps) => {
   return (
     <Box
@@ -37,6 +42,14 @@ export const MenuTableWork = ({
         onClick={() => onSelectTab("columns")}
       >
         Колонки
+      </MenuTab>
+
+      <MenuTab
+        active={activeHistoryMenu}
+        startIcon={<RestorePageIcon />}
+        onClick={onToggleMenuHistory}
+      >
+        История изменений
       </MenuTab>
     </Box>
   );

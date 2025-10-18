@@ -9,3 +9,4 @@ export * from "./RegistrationForm";
 export * from "./AddUserAction";
 export * from "./ChangeUserRole";
 export * from "./DeleteUserAction";
+export * from "./ChangesHistory";

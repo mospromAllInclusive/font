@@ -8,6 +8,7 @@ import {
   DeleteColumnAction,
   TableColumnList,
   EditColumnAction,
+  ChangesHistory,
 } from "@features";
 import { useSnackbar } from "notistack";
 import type { TableMenuPanel } from "@shared/model";
@@ -16,8 +17,14 @@ import type { GetTableMetaDTO } from "src/shared/network/dto/table/GetTableMetaD
 import type { GetRoleDTO } from "@shared/network";
 
 export const TableWorkArea = () => {
-  const { activePanel, getTableInfo, setTableMenuActivePanel, checkRole } =
-    useViewModel();
+  const {
+    isActiveMenuHistory,
+    activePanel,
+    getTableInfo,
+    setTableMenuActivePanel,
+    checkRole,
+    handleTogleMenuHistory,
+  } = useViewModel();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -78,22 +85,34 @@ export const TableWorkArea = () => {
         </Typography>
 
         <MenuTableWork
+          activeHistoryMenu={isActiveMenuHistory}
           activeValue={activePanel}
           onSelectTab={handleSelectTab}
+          onToggleMenuHistory={handleTogleMenuHistory}
         />
       </Box>
 
       {tableMeta && (
         <>
-          {activePanel !== "columns" && (
-            <Box flex="1" height="100%" overflow="hidden" marginTop="10px">
-              <TableEditor
-                role={role}
-                key={tableMeta.id}
-                tableId={tableMeta.id}
-              />
-            </Box>
-          )}
+          <Box
+            flex="1"
+            display="flex"
+            height="100%"
+            overflow="hidden"
+            marginTop="10px"
+          >
+            {activePanel !== "columns" && (
+              <Box flex="1" height="100%" overflow="hidden">
+                <TableEditor
+                  role={role}
+                  key={tableMeta.id}
+                  tableId={tableMeta.id}
+                />
+              </Box>
+            )}
+
+            {isActiveMenuHistory && <ChangesHistory tableId={tableMeta.id} />}
+          </Box>
 
           {activePanel === "columns" && (
             <Box

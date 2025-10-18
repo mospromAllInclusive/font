@@ -1,9 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { createSlice } from "@reduxjs/toolkit";
-import { tableSlice } from "./slices";
-import { tableMenuSlice } from "./slices";
-import { userInfoSlice } from "./slices";
+import {
+  tableMenuSlice,
+  userInfoSlice,
+  tableSlice,
+  historyMenuSlice,
+} from "./slices";
 
 export const templateSlice = createSlice({
   name: "template",
@@ -16,6 +19,7 @@ export const store = configureStore({
     table: tableSlice.reducer,
     tableMenu: tableMenuSlice.reducer,
     userInfo: userInfoSlice.reducer,
+    historyMenu: historyMenuSlice.reducer,
   },
 });
 
