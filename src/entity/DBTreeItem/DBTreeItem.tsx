@@ -1,12 +1,11 @@
-import { useState, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import { TreeItem, mainVioletColor } from "@shared";
 import { FaDatabase, FaTable } from "react-icons/fa6";
 import { TbSql } from "react-icons/tb";
 import { IoLinkSharp, IoChatbox } from "react-icons/io5";
 import { TbUsers } from "react-icons/tb";
 import type { TreeItemProps } from "@mui/x-tree-view";
-import { IconButton, Menu, MenuItem } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 const iconMatcher = {

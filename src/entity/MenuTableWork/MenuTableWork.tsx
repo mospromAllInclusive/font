@@ -4,7 +4,7 @@ import { MdViewColumn } from "react-icons/md";
 import { MenuTab } from "./ui/MenuTab";
 import type { TableMenuPanel } from "@shared/model";
 
-type MenuTableWorkProps = {
+export type MenuTableWorkProps = {
   activeValue: TableMenuPanel;
   onSelectTab: (value: TableMenuPanel) => void;
 };
