@@ -45,6 +45,18 @@ class DatabaseService {
       return { data: null, error: error as AxiosError };
     }
   }
+
+  async deleteUser(dbId: string, userId: string) {
+    try {
+      const { data } = await network.post(`/databases/${dbId}/delete-user`, {
+        user_id: Number(userId),
+      });
+
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
 }
 
 export const databaseService = new DatabaseService();

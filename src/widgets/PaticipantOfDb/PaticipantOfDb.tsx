@@ -8,6 +8,8 @@ import {
   SuccessAddUserToDBEvent,
   ChangeUserRole,
   SuccessChangeUserRole,
+  DeleteUserAction,
+  SuccessDeleteUser,
 } from "@features";
 import { List, ListItem, ListItemText, ListItemButton } from "@mui/material";
 import type { GetDbUserInfoDTO } from "@shared/network";
@@ -45,10 +47,12 @@ export const PaticipantOfDB = () => {
 
     window.addEventListener(SuccessAddUserToDBEvent, handleUpdateUserList);
     window.addEventListener(SuccessChangeUserRole, handleUpdateUserList);
+    window.addEventListener(SuccessDeleteUser, handleUpdateUserList);
 
     return () => {
       window.removeEventListener(SuccessAddUserToDBEvent, handleUpdateUserList);
       window.removeEventListener(SuccessChangeUserRole, handleUpdateUserList);
+      window.removeEventListener(SuccessDeleteUser, handleUpdateUserList);
     };
   }, [location]);
 
@@ -94,11 +98,20 @@ export const PaticipantOfDB = () => {
               }}
             >
               <ListItemText primary={user.name} />
+
               {dbId && (
                 <ChangeUserRole
                   dbId={dbId}
                   userId={String(user.id)}
                   role={user.role}
+                />
+              )}
+
+              {dbId && (
+                <DeleteUserAction
+                  dbId={dbId}
+                  userId={String(user.id)}
+                  deletedUserName={user.name}
                 />
               )}
             </ListItemButton>
