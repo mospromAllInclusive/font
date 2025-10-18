@@ -11,6 +11,7 @@ export const useTableGrid = (tableInfo: GetTableDataDTO | null) => {
         field: col.id,
         headerName: col.name,
         editable: true,
+        width: 150,
       };
     });
 

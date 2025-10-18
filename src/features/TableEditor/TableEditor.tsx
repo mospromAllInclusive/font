@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  DataGrid,
-  GridFooterContainer,
-  GridPagination,
-} from "@mui/x-data-grid";
+import { DataGrid, GridFooterContainer } from "@mui/x-data-grid";
 import { AddRowAction } from "../AddRowAction";
 import { useViewModel } from "./hooks/useViewModel";
 import { Box, Button } from "@mui/material";
@@ -21,7 +17,8 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
 
-  const { paginationMeta, setPaginationMeta } = useNavigationMeta();
+  const { sortMeta, paginationMeta, setPaginationMeta, handleSort } =
+    useNavigationMeta();
 
   const { gridColumns, gridRows } = useTableGrid(tableInfo);
 
@@ -34,7 +31,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
 
   const handleUpdateTableInfo = async () => {
     setIsLoading(true);
-    const response = await fetchTableData(tableId, paginationMeta);
+    const response = await fetchTableData(tableId, paginationMeta, sortMeta);
     setIsLoading(false);
 
     if (response.error) {
@@ -61,7 +58,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       window.removeEventListener(SuccessAddRowEvent, handleUpdateTableInfo);
       window.removeEventListener(RowsDeleteEvent, handleUpdateTableInfo);
     };
-  }, [paginationMeta]);
+  }, [paginationMeta, sortMeta]);
 
   return (
     <DataGrid
@@ -71,6 +68,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       showColumnVerticalBorder
       rowSelection
       checkboxSelection
+      onSortModelChange={handleSort}
       rowSelectionModel={{ type: "include", ids: selectedRows }}
       onRowSelectionModelChange={(select) => {
         handleSelectRows(select.ids);

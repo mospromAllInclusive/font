@@ -8,7 +8,8 @@ import camelcaseKeys from "camelcase-keys";
 class TableService {
   async getTable(
     tableId: string,
-    pagination: { page: number; pageSize: number }
+    pagination: { page: number; pageSize: number },
+    sortMeta: { field: string; sort: "asc" | "desc" | null | undefined }
   ): Promise<Response<GetTableDataDTO>> {
     const { page, pageSize } = pagination;
     try {
@@ -16,6 +17,8 @@ class TableService {
         params: {
           page,
           perPage: pageSize,
+          sortBy: sortMeta.field || undefined,
+          sortDir: sortMeta.sort || undefined,
         },
       });
       return {
