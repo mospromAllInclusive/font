@@ -17,8 +17,16 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
 
-  const { sortMeta, paginationMeta, setPaginationMeta, handleSort } =
-    useNavigationMeta();
+  const {
+    filterText,
+    filterCol,
+    setFilterText,
+    setFilterCol,
+    sortMeta,
+    paginationMeta,
+    setPaginationMeta,
+    handleSort,
+  } = useNavigationMeta();
 
   const { gridColumns, gridRows } = useTableGrid(tableInfo);
 
@@ -31,7 +39,10 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
 
   const handleUpdateTableInfo = async () => {
     setIsLoading(true);
-    const response = await fetchTableData(tableId, paginationMeta, sortMeta);
+    const response = await fetchTableData(tableId, paginationMeta, sortMeta, {
+      filterText,
+      filterCol,
+    });
     setIsLoading(false);
 
     if (response.error) {
@@ -58,7 +69,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       window.removeEventListener(SuccessAddRowEvent, handleUpdateTableInfo);
       window.removeEventListener(RowsDeleteEvent, handleUpdateTableInfo);
     };
-  }, [paginationMeta, sortMeta]);
+  }, [paginationMeta, sortMeta, filterText, filterCol]);
 
   return (
     <DataGrid
@@ -68,6 +79,16 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       showColumnVerticalBorder
       rowSelection
       checkboxSelection
+      onFilterModelChange={(model) => {
+        const filterItem = model.items[0];
+        if (!filterItem) {
+          setFilterCol(undefined);
+          setFilterText(undefined);
+          return;
+        }
+        setFilterCol(filterItem.field);
+        setFilterText(filterItem.value);
+      }}
       onSortModelChange={handleSort}
       rowSelectionModel={{ type: "include", ids: selectedRows }}
       onRowSelectionModelChange={(select) => {
@@ -85,6 +106,15 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
         expand: true,
       }}
       slots={{
+        // filterPanel: () => (
+        //   <FilterPanel
+        //     currentColumn={filterCol}
+        //     filterText={filterText}
+        //     onChangeColumn={setFilterCol}
+        //     onChangeFilterText={setFilterText}
+        //     columns={tableInfo?.table.columns || []}
+        //   />
+        // ),
         footer: () => (
           <GridFooterContainer>
             <Box display="flex" pl={1} gap={2}>

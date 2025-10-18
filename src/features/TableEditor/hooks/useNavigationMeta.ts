@@ -22,6 +22,9 @@ export const useNavigationMeta = () => {
     sort: undefined,
   });
 
+  const [filterCol, setFilterCol] = useState<undefined | string>(undefined);
+  const [filterText, setFilterText] = useState<undefined | string>(undefined);
+
   const handleSort = (sortModel: GridSortModel) => {
     const newMeta = sortModel[0];
 
@@ -33,5 +36,14 @@ export const useNavigationMeta = () => {
     setSortMeta({ field: "", sort: undefined });
   };
 
-  return { paginationMeta, sortMeta, setPaginationMeta, handleSort };
+  return {
+    filterCol,
+    filterText,
+    paginationMeta,
+    sortMeta,
+    setFilterCol,
+    setFilterText,
+    setPaginationMeta,
+    handleSort,
+  };
 };

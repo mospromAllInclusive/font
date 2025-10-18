@@ -9,7 +9,8 @@ class TableService {
   async getTable(
     tableId: string,
     pagination: { page: number; pageSize: number },
-    sortMeta: { field: string; sort: "asc" | "desc" | null | undefined }
+    sortMeta: { field: string; sort: "asc" | "desc" | null | undefined },
+    filter: { filterCol: string | undefined; filterText: string | undefined }
   ): Promise<Response<GetTableDataDTO>> {
     const { page, pageSize } = pagination;
     try {
@@ -19,6 +20,8 @@ class TableService {
           perPage: pageSize,
           sortBy: sortMeta.field || undefined,
           sortDir: sortMeta.sort || undefined,
+          filterBy: filter.filterCol,
+          filterValue: filter.filterText,
         },
       });
       return {

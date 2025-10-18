@@ -15,9 +15,13 @@ export const useViewModel = () => {
   const fetchTableData = async (
     tableId: string,
     paginationMeta: PaginationMeta,
-    sort: SortMeta
+    sort: SortMeta,
+    filter: {
+      filterCol: string | undefined;
+      filterText: string | undefined;
+    }
   ) => {
-    return await tableService.getTable(tableId, paginationMeta, sort);
+    return await tableService.getTable(tableId, paginationMeta, sort, filter);
   };
 
   const updateTableCell = async (
