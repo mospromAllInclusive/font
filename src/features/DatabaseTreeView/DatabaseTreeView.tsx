@@ -26,10 +26,12 @@ export const DatabaseTreeView = () => {
     if (!entityUrl) return;
 
     const isTableEntity = entityUrl.startsWith("/table-item");
+    const isPaticipantEntity = entityUrl.startsWith("/paticipant-list");
 
-    if (!isTableEntity) return;
-
-    history.push(entityUrl);
+    if (isTableEntity || isPaticipantEntity) {
+      history.push(entityUrl);
+      return;
+    }
   };
 
   useLifecycles(

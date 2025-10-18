@@ -137,6 +137,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       showColumnVerticalBorder
       rowSelection
       checkboxSelection
+      rowSelectionModel={{ type: "include", ids: selectedRows }}
       onRowSelectionModelChange={(select) => {
         handleSelectRows(select.ids);
       }}

@@ -5,7 +5,7 @@ import "@fontsource/roboto/700.css";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useState } from "react";
 import { Box, CircularProgress } from "@mui/material";
-import { LeftSidebar, TableWorkArea, AuthPage } from "@widgets";
+import { LeftSidebar, TableWorkArea, AuthPage, PaticipantOfDB } from "@widgets";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "@shared/theme";
@@ -58,6 +58,9 @@ const AppContent = () => {
         <Switch>
           <Route path="/table-item">
             <TableWorkArea />
+          </Route>
+          <Route path="/paticipant-list">
+            <PaticipantOfDB />
           </Route>
         </Switch>
       </Box>
