@@ -1,4 +1,5 @@
 import { tableService } from "@shared/network";
+import { databaseService } from "@shared/network";
 import { tableMenuActions, type TableMenuPanel } from "@shared/model";
 import { useAppSelector } from "@shared/model";
 import { useAppDispatch } from "@shared/model";
@@ -15,5 +16,9 @@ export const useViewModel = () => {
     dispath(tableMenuActions.setActivePanel(panel));
   };
 
-  return { activePanel, getTableInfo, setTableMenuActivePanel };
+  const checkRole = async (dbId: string) => {
+    return await databaseService.getRole(dbId);
+  };
+
+  return { activePanel, getTableInfo, checkRole, setTableMenuActivePanel };
 };

@@ -10,16 +10,21 @@ import {
   TableColumnList,
   EditColumnAction,
 } from "@features";
-
+import { useSnackbar } from "notistack";
 import type { TableMenuPanel } from "@shared/model";
 import { getTableIdFromPageUrl } from "@shared/utils";
 import type { GetTableMetaDTO } from "src/shared/network/dto/table/GetTableMetaDTO";
+import type { GetRoleDTO } from "@shared/network";
 
 export const TableWorkArea = () => {
-  const { activePanel, getTableInfo, setTableMenuActivePanel } = useViewModel();
+  const { activePanel, getTableInfo, setTableMenuActivePanel, checkRole } =
+    useViewModel();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const location = useLocation();
 
+  const [role, setRole] = useState<GetRoleDTO | null>(null);
   const [tableMeta, setTableMeta] = useState<GetTableMetaDTO | null>(null);
 
   const handleUpdateTableInfo = async () => {
@@ -36,6 +41,17 @@ export const TableWorkArea = () => {
     }
 
     setTableMeta(response.data);
+
+    const dbId = response.data.databaseId;
+
+    const roleResponse = await checkRole(String(dbId));
+
+    if (roleResponse.error) {
+      enqueueSnackbar("Не удалось установить рлоль!", { variant: "error" });
+      return;
+    }
+
+    setRole(roleResponse.data.role);
   };
 
   const handleSelectTab = (tab: TableMenuPanel) => {
@@ -72,7 +88,11 @@ export const TableWorkArea = () => {
         <>
           {activePanel !== "columns" && (
             <Box flex="1" height="100%" overflow="hidden" marginTop="10px">
-              <TableEditor key={tableMeta.id} tableId={tableMeta.id} />
+              <TableEditor
+                role={role}
+                key={tableMeta.id}
+                tableId={tableMeta.id}
+              />
             </Box>
           )}
 
@@ -84,18 +104,24 @@ export const TableWorkArea = () => {
               marginTop="10px"
               overflow="auto"
             >
-              <AddColumnAction
-                tableId={tableMeta.id}
-                sx={{ marginBottom: "8px" }}
-              />
+              {role === "admin" && (
+                <AddColumnAction
+                  tableId={tableMeta.id}
+                  sx={{ marginBottom: "8px" }}
+                />
+              )}
 
               <TableColumnList
                 key={tableMeta.id}
                 tableId={tableMeta.id}
                 itemActionSlot={(column) => (
                   <>
-                    <EditColumnAction tableId={tableMeta.id} {...column} />
-                    <DeleteColumnAction tableId={tableMeta.id} {...column} />
+                    {role === "admin" && (
+                      <EditColumnAction tableId={tableMeta.id} {...column} />
+                    )}
+                    {role === "admin" && (
+                      <DeleteColumnAction tableId={tableMeta.id} {...column} />
+                    )}
                   </>
                 )}
               />

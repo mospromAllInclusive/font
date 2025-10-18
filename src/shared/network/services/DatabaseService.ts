@@ -2,6 +2,7 @@ import { network } from "../shared/network";
 import type { GetDbUserInfoDTO } from "../dto";
 import type { Response } from "../shared/Response";
 import type { AxiosError } from "axios";
+import type { GetRoleDTO } from "../dto";
 import camelcaseKeys from "camelcase-keys";
 
 class DatabaseService {
@@ -12,6 +13,18 @@ class DatabaseService {
       );
 
       return { data: camelcaseKeys(data), error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
+
+  async getRole(dbId: string): Promise<Response<{ role: GetRoleDTO }>> {
+    try {
+      const { data } = await network.get<{ role: GetRoleDTO }>(
+        `/databases/${dbId}/role`
+      );
+
+      return { data, error: null };
     } catch (error) {
       return { data: null, error: error as AxiosError };
     }

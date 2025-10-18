@@ -5,13 +5,19 @@ import { useViewModel } from "./hooks/useViewModel";
 import { Box, Button } from "@mui/material";
 import { SuccessAddRowEvent } from "../AddRowAction";
 import { useTableGrid } from "./hooks/useTableGrid";
-import type { GetTableDataDTO } from "@shared/network";
+import type { GetRoleDTO, GetTableDataDTO } from "@shared/network";
 import { RowsDeleteEvent } from "./events/RowsDeleteEvent";
 import { useRowChange } from "./hooks/useRowChange";
 import { useNavigationMeta } from "./hooks/useNavigationMeta";
 import { TablePaginator } from "@entity";
 
-export const TableEditor = ({ tableId }: { tableId: string }) => {
+export const TableEditor = ({
+  tableId,
+  role,
+}: {
+  tableId: string;
+  role: GetRoleDTO;
+}) => {
   const { fetchTableData } = useViewModel();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -71,15 +77,16 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
     };
   }, [paginationMeta, sortMeta, filterText]);
 
+  const possibleEditTable = role === "admin" || role === "writer";
+
   return (
     <DataGrid
       autosizeOnMount
       disableRowSelectionOnClick
       showCellVerticalBorder
       showColumnVerticalBorder
-      rowSelection
       filterDebounceMs={300}
-      checkboxSelection
+      checkboxSelection={possibleEditTable}
       onFilterModelChange={(model) => {
         const filterItem = model.items[0];
 
@@ -119,13 +126,13 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
         footer: () => (
           <GridFooterContainer>
             <Box display="flex" pl={1} gap={2}>
-              {gridColumns.length > 0 && (
+              {gridColumns.length > 0 && possibleEditTable && (
                 <AddRowAction
                   tableId={tableId}
                   columns={tableInfo?.table.columns || []}
                 />
               )}
-              {selectedRows.size > 0 && (
+              {selectedRows.size > 0 && possibleEditTable && (
                 <Button
                   variant="contained"
                   color="error"
