@@ -5,3 +5,4 @@ export * from "./MenuTableWork";
 export * from "./Background";
 export * from "./TablePaginator";
 export * from "./FilterPanel";
+export * from "./EnumEditor";

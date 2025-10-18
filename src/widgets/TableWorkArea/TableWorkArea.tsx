@@ -5,7 +5,6 @@ import { TableEditor } from "@features";
 import { useLocation } from "react-router-dom";
 import { useViewModel } from "./hooks/useViewModel";
 import {
-  AddColumnAction,
   DeleteColumnAction,
   TableColumnList,
   EditColumnAction,
@@ -105,10 +104,7 @@ export const TableWorkArea = () => {
               overflow="auto"
             >
               {role === "admin" && (
-                <AddColumnAction
-                  tableId={tableMeta.id}
-                  sx={{ marginBottom: "8px" }}
-                />
+                <EditColumnAction tableId={tableMeta.id} view="CREATE" />
               )}
 
               <TableColumnList
@@ -117,7 +113,11 @@ export const TableWorkArea = () => {
                 itemActionSlot={(column) => (
                   <>
                     {role === "admin" && (
-                      <EditColumnAction tableId={tableMeta.id} {...column} />
+                      <EditColumnAction
+                        view="EDIT"
+                        tableId={tableMeta.id}
+                        {...column}
+                      />
                     )}
                     {role === "admin" && (
                       <DeleteColumnAction tableId={tableMeta.id} {...column} />

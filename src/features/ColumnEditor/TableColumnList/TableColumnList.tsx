@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import { List, ListItem, ListItemText, ListItemButton } from "@mui/material";
 import { useLifecycles } from "react-use";
 import { useViewModel } from "./hooks/useViewModel";
-import { SuccessAddColumn } from "../AddColumnAction";
+import { SuccessAddColumn } from "../EditColumnAction";
 import { SuccessDeleteColumn } from "../DeleteColumnAction";
 import { SuccessEditColumn } from "../EditColumnAction";
 import type { GetColumnDTO } from "@shared/network";
@@ -11,6 +11,7 @@ import { useSnackbar } from "notistack";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
 import Filter1Icon from "@mui/icons-material/Filter1";
 import ListIcon from "@mui/icons-material/List";
+import MoreTimeIcon from "@mui/icons-material/MoreTime";
 
 type TableColumnListProps = {
   tableId: string;
@@ -82,6 +83,7 @@ export const TableColumnList = ({
             {col.type === "text" && <TextFieldsIcon />}
             {col.type === "numeric" && <Filter1Icon />}
             {col.type === "enum" && <ListIcon />}
+            {col.type === "timestamp" && <MoreTimeIcon />}
             <ListItemText primary={col.name} />
           </ListItemButton>
         </ListItem>

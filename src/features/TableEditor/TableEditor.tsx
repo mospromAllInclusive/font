@@ -86,6 +86,9 @@ export const TableEditor = ({
       showCellVerticalBorder
       showColumnVerticalBorder
       filterDebounceMs={300}
+      onCellClick={(...args) => {
+        console.log(args);
+      }}
       checkboxSelection={possibleEditTable}
       onFilterModelChange={(model) => {
         const filterItem = model.items[0];

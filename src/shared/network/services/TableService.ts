@@ -164,7 +164,7 @@ class TableService {
 
   async editColInfo(
     tableId: string,
-    col: { id: string; name: string; type: string }
+    col: { id: string; name: string; type: string; enum: string[] }
   ) {
     try {
       const { data } = await network.post(`/tables/edit-column`, {
