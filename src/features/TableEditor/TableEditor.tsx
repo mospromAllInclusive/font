@@ -11,14 +11,19 @@ import { Box } from "@mui/material";
 import { SuccessAddRowEvent } from "../AddRowAction";
 import type { GetTableDataDTO } from "@shared/network";
 import type { GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { useSnackbar } from "notistack";
 
 export const TableEditor = ({ tableId }: { tableId: string }) => {
-  const { fetchTableData } = useViewModel();
+  const { fetchTableData, updateTableCell } = useViewModel();
+  const { enqueueSnackbar } = useSnackbar();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
 
   const handleUpdateTableInfo = async () => {
+    setIsLoading(true);
     const response = await fetchTableData(tableId);
+    setIsLoading(false);
 
     if (response.error) {
       setTableInfo(null);
@@ -26,6 +31,31 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
     }
 
     setTableInfo(response.data);
+  };
+
+  const handleRowUpdate = async (newRowObj: unknown, oldRowObj: unknown) => {
+    const newRow = newRowObj as Record<string, unknown>;
+    const oldRow = oldRowObj as Record<string, unknown>;
+
+    const colNames = Object.keys(newRow);
+
+    for (const colId of colNames) {
+      if (newRow[colId] === oldRow[colId]) continue;
+
+      const response = await updateTableCell(
+        tableId,
+        newRow.id as string,
+        colId,
+        newRow[colId]
+      );
+
+      if (response.error) {
+        enqueueSnackbar("Ошибка изменения ячейки!", { variant: "error" });
+        return oldRow;
+      }
+    }
+
+    return newRow as Record<string, unknown>;
   };
 
   const gridColumns: GridColDef[] = useMemo(() => {
@@ -38,6 +68,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
         name: `${col.name}_${col.id}`,
         field: col.id,
         headerName: col.name,
+        editable: true,
       };
     });
   }, [tableInfo]);
@@ -67,23 +98,25 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
 
   return (
     <DataGrid
-      rowSelection={true}
-      editMode="row"
       autosizeOnMount
       disableRowSelectionOnClick
       showCellVerticalBorder
       showColumnVerticalBorder
+      processRowUpdate={handleRowUpdate}
       sx={{ width: "100%", borderRadius: "8px" }}
       rows={gridRows}
+      loading={isLoading}
       columns={gridColumns}
       slots={{
         footer: () => (
           <GridFooterContainer>
             <Box pl={1}>
-              <AddRowAction
-                tableId={tableId}
-                columns={tableInfo?.table.columns || []}
-              />
+              {gridColumns.length > 0 && (
+                <AddRowAction
+                  tableId={tableId}
+                  columns={tableInfo?.table.columns || []}
+                />
+              )}
             </Box>
 
             <GridPagination />

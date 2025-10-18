@@ -15,5 +15,19 @@ export const useViewModel = () => {
     return await tableService.getTable(tableId);
   };
 
-  return { selectedRowIds, fetchTableData, handleSetSelectedRows };
+  const updateTableCell = async (
+    tableId: string,
+    rowId: string,
+    colId: string,
+    value: unknown
+  ) => {
+    return await tableService.setTableCell(tableId, rowId, colId, value);
+  };
+
+  return {
+    selectedRowIds,
+    fetchTableData,
+    handleSetSelectedRows,
+    updateTableCell,
+  };
 };

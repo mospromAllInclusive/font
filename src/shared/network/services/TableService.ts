@@ -88,6 +88,25 @@ class TableService {
       return { data: null, error: error as AxiosError };
     }
   }
+
+  async setTableCell(
+    tableId: string,
+    rowId: string,
+    colId: string,
+    value: unknown
+  ) {
+    try {
+      const { data } = await network.post(`/tables/${tableId}/set-cell-value`, {
+        row_id: rowId,
+        column_id: colId,
+        value: value,
+      });
+
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
 }
 
 export const tableService = new TableService();
