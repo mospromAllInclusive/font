@@ -33,8 +33,13 @@ export const EditColumnAction = ({
 
   const [values, setValues] = useState({
     name: name || "",
-    type: type || "string",
+    type: type || "text",
   });
+
+  const handleCloseDialog = () => {
+    setValues({ name: "", type: "text" });
+    setShowDialog(false);
+  };
 
   const handleEditColName = (colName: string) => {
     setValues({ ...values, name: colName });
@@ -68,7 +73,7 @@ export const EditColumnAction = ({
 
     window.dispatchEvent(new Event(SuccessEditColumn));
 
-    setShowDialog(false);
+    handleCloseDialog();
   };
 
   const isValid = () => {
@@ -116,7 +121,9 @@ export const EditColumnAction = ({
             </FormControl>
 
             <Box display="flex" gap={1} justifyContent="end">
-              <Button loading={isUpdating}>Закрыть</Button>
+              <Button loading={isUpdating} onClick={handleCloseDialog}>
+                Закрыть
+              </Button>
 
               <Button
                 loading={isUpdating}

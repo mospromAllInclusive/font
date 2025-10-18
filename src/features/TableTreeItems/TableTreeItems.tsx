@@ -23,11 +23,12 @@ import type { Response } from "@shared/network";
 type TableTreeItemsProps = {
   dbId: string;
   tables: GetTreeTableDTO[];
+  role: "admin" | "writer" | "reader";
 };
 
 type CreationMethod = CrateTableButtonProps["view"];
 
-export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
+export const TableTreeItems = ({ dbId, tables, role }: TableTreeItemsProps) => {
   const { addTable, addTableViaFile } = useViewModel();
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -113,6 +114,7 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
         itemId={`/table-list/${dbId}`}
         iconKey="table"
         label="Таблицы"
+        showOptions={role === "admin"}
         onAddEntity={handleOpenDialog}
       >
         {tables.map((table) => (
@@ -120,6 +122,7 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
             key={table.id}
             tableId={table.id}
             tableName={table.name}
+            enableDelete={role === "admin"}
           />
         ))}
       </DBTreeItem>

@@ -13,13 +13,15 @@ import {
 } from "@features";
 import { List, ListItem, ListItemText, ListItemButton } from "@mui/material";
 import type { GetDbUserInfoDTO } from "@shared/network";
+import type { GetRoleDTO } from "@shared/network";
 
 export const PaticipantOfDB = () => {
-  const { fetchUsersOfDb } = useViewModel();
+  const { fetchUsersOfDb, checkRole } = useViewModel();
   const { enqueueSnackbar } = useSnackbar();
   const { palette } = useTheme();
   const location = useLocation();
 
+  const [role, setRole] = useState<GetRoleDTO | null>(null);
   const [dbId, setDbId] = useState<string | null>(null);
   const [userList, setUserList] = useState<GetDbUserInfoDTO[]>([]);
 
@@ -40,6 +42,15 @@ export const PaticipantOfDB = () => {
     }
 
     setUserList(response.data);
+
+    const roleResponse = await checkRole(String(dbId));
+
+    if (roleResponse.error) {
+      enqueueSnackbar("Не удалось установить рлоль!", { variant: "error" });
+      return;
+    }
+
+    setRole(roleResponse.data.role);
   };
 
   useEffect(() => {
@@ -71,7 +82,7 @@ export const PaticipantOfDB = () => {
         Участники таблицы
       </Typography>
 
-      {dbId && (
+      {dbId && role === "admin" && (
         <Box display="flex" gap={2}>
           <AddUserAction dbId={dbId} />
         </Box>
@@ -99,7 +110,7 @@ export const PaticipantOfDB = () => {
             >
               <ListItemText primary={user.name} />
 
-              {dbId && (
+              {dbId && role === "admin" && (
                 <ChangeUserRole
                   dbId={dbId}
                   userId={String(user.id)}
@@ -107,7 +118,7 @@ export const PaticipantOfDB = () => {
                 />
               )}
 
-              {dbId && (
+              {dbId && role === "admin" && (
                 <DeleteUserAction
                   dbId={dbId}
                   userId={String(user.id)}

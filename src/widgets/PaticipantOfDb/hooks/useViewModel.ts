@@ -5,5 +5,9 @@ export const useViewModel = () => {
     return await databaseService.fetchDbUsers(dbId);
   };
 
-  return { fetchUsersOfDb };
+  const checkRole = async (dbId: string) => {
+    return await databaseService.getRole(dbId);
+  };
+
+  return { fetchUsersOfDb, checkRole };
 };

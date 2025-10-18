@@ -64,7 +64,7 @@ export const DatabaseTreeView = () => {
           onAddEntity={handleAddDatabase}
           showOptions={false}
         >
-          <TableTreeItems dbId={db.id} tables={db.tables} />
+          <TableTreeItems role={db.role} dbId={db.id} tables={db.tables} />
 
           <DBTreeItem
             itemId={`/paticipant-list/${db.id}`}

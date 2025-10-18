@@ -16,9 +16,11 @@ import { SuccessDeleteTable } from "./events/SuccessDeleteTable";
 export const TableTreeItem = ({
   tableId,
   tableName,
+  enableDelete = true,
 }: {
   tableId: string;
   tableName: string;
+  enableDelete?: boolean;
 }) => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -59,9 +61,11 @@ export const TableTreeItem = ({
         label={
           <>
             {tableName}{" "}
-            <IconButton size="small" onClick={handleOpenDeleteDialog}>
-              <DeleteIcon fontSize="inherit" />
-            </IconButton>
+            {enableDelete && (
+              <IconButton size="small" onClick={handleOpenDeleteDialog}>
+                <DeleteIcon fontSize="inherit" />
+              </IconButton>
+            )}
           </>
         }
       />
