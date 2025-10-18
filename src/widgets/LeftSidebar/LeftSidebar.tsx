@@ -14,6 +14,8 @@ export const LeftSidebar = (props: BoxProps) => {
       width="100%"
       height="100%"
       padding={2}
+      display="flex"
+      flexDirection="column"
       sx={{
         backgroundColor: "rgb(244 244 245 / 1)",
         borderRight: "1px solid rgb(231 228 230 / 1)",

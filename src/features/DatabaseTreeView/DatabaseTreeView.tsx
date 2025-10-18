@@ -51,6 +51,7 @@ export const DatabaseTreeView = () => {
 
   return (
     <SimpleTreeView
+      sx={{ flex: 1, overflow: "auto" }}
       onSelectedItemsChange={(_, itemId) => {
         handleSelectItem(itemId);
       }}
