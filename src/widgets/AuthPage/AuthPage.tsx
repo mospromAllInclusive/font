@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { LogInForm } from "@features";
+import { LogInForm, RegistrationForm } from "@features";
 import { Background } from "@entity";
 
 export const AuthPage = () => {
@@ -14,6 +14,22 @@ export const AuthPage = () => {
     >
       <Background />
       <LogInForm />
+    </Box>
+  );
+};
+
+export const RegistrationPage = () => {
+  return (
+    <Box
+      width="100%"
+      height="100%"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      bgcolor="rgb(211, 160, 203, 0.4)"
+    >
+      <Background />
+      <RegistrationForm />
     </Box>
   );
 };

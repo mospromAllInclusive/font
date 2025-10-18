@@ -4,18 +4,27 @@ import { useViewModel } from "./hooks/useViewModel";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
-export const LogInForm = () => {
-  const { authUserByData, setUserInfo } = useViewModel();
+export const RegistrationForm = () => {
+  const { setUserInfo, registerUser } = useViewModel();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const history = useHistory();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [values, setValues] = useState<{ email: string; password: string }>({
+  const [values, setValues] = useState<{
+    name: string;
+    email: string;
+    password: string;
+  }>({
+    name: "",
     email: "",
     password: "",
   });
+
+  const handleUpdateName = (e: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, name: e.target.value });
+  };
 
   const handleUpdateLogin = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, email: e.target.value });
@@ -27,7 +36,9 @@ export const LogInForm = () => {
 
   const handleSubmitForm = async () => {
     setIsLoading(true);
-    const response = await authUserByData(values);
+
+    const response = await registerUser(values);
+
     setIsLoading(false);
 
     if (response.error) {
@@ -36,14 +47,16 @@ export const LogInForm = () => {
     }
 
     setUserInfo(response.data);
+
+    history.push("/");
   };
 
-  const handleGoToCreateAccaunt = () => {
-    history.push("/registration");
+  const handleGoToLogin = () => {
+    history.push("/");
   };
 
   const isValid = () => {
-    return values.email && values.password;
+    return values.email.trim() && values.password.trim() && values.name.trim();
   };
 
   return (
@@ -71,6 +84,14 @@ export const LogInForm = () => {
       >
         Simple Table
       </Typography>
+
+      <TextField
+        value={values.name}
+        onChange={handleUpdateName}
+        size="small"
+        fullWidth
+        label="Имя пользователя"
+      />
 
       <TextField
         value={values.email}
@@ -104,19 +125,17 @@ export const LogInForm = () => {
           type="submit"
           variant="contained"
         >
-          Войти
+          Зарегистрироваться
         </Button>
-
-        <Typography sx={{ display: "flex" }}>или</Typography>
 
         <Button
           fullWidth
           loading={isLoading}
           type="submit"
           variant="outlined"
-          onClick={handleGoToCreateAccaunt}
+          onClick={handleGoToLogin}
         >
-          Создать аккаунт
+          Назад
         </Button>
       </Box>
     </Box>

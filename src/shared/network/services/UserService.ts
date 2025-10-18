@@ -9,6 +9,7 @@ export class UserService {
   async login(payload: CreateUserDTO): Promise<Response<GetUserDTO>> {
     try {
       const { data } = await network.post<GetUserDTO>("/users/login", payload);
+
       return { data: camelcaseKeys(data), error: null };
     } catch (error) {
       return { data: null, error: error as AxiosError };
@@ -18,6 +19,17 @@ export class UserService {
   async getUserInfo() {
     try {
       const { data } = await network.get<GetUserDTO["userInfo"]>("/users/info");
+
+      return { data: camelcaseKeys(data), error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
+
+  async registerUser(props: { email: string; name: string; password: string }) {
+    try {
+      const { data } = await network.post<GetUserDTO>("/users/register", props);
+
       return { data: camelcaseKeys(data), error: null };
     } catch (error) {
       return { data: null, error: error as AxiosError };

@@ -5,3 +5,4 @@ export * from "./ColumnEditor";
 export * from "./TableEditor";
 export * from "./LogInForm";
 export * from "./AddRowAction";
+export * from "./RegistrationForm";
