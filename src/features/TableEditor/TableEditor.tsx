@@ -30,6 +30,8 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
 
   const { gridColumns, gridRows } = useTableGrid(tableInfo);
 
+  // console.log("gridColumns :>> ", gridColumns);
+
   const {
     selectedRows,
     handleDeleteRows: deleteRows,
@@ -39,10 +41,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
 
   const handleUpdateTableInfo = async () => {
     setIsLoading(true);
-    const response = await fetchTableData(tableId, paginationMeta, sortMeta, {
-      filterText,
-      filterCol,
-    });
+    const response = await fetchTableData(tableId, paginationMeta, sortMeta);
     setIsLoading(false);
 
     if (response.error) {
@@ -81,13 +80,17 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       checkboxSelection
       onFilterModelChange={(model) => {
         const filterItem = model.items[0];
+
         if (!filterItem) {
           setFilterCol(undefined);
           setFilterText(undefined);
-          return;
+          return model;
         }
+
         setFilterCol(filterItem.field);
         setFilterText(filterItem.value);
+
+        return model;
       }}
       onSortModelChange={handleSort}
       rowSelectionModel={{ type: "include", ids: selectedRows }}
