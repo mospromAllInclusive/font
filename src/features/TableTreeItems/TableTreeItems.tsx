@@ -84,7 +84,11 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
         onAddEntity={handleOpenDialog}
       >
         {tables.map((table) => (
-          <TableTreeItem tableId={table.id} tableName={table.name} />
+          <TableTreeItem
+            key={table.id}
+            tableId={table.id}
+            tableName={table.name}
+          />
         ))}
       </DBTreeItem>
 

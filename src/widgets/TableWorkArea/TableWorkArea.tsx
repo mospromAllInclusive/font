@@ -81,8 +81,12 @@ export const TableWorkArea = () => {
               alignItems="flex-start"
               flexDirection="column"
               marginTop="10px"
+              overflow="auto"
             >
-              <AddColumnAction tableId={tableMeta.id} />
+              <AddColumnAction
+                tableId={tableMeta.id}
+                sx={{ marginBottom: "8px" }}
+              />
 
               <TableColumnList
                 key={tableMeta.id}

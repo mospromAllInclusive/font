@@ -10,6 +10,7 @@ import {
   InputLabel,
   MenuItem,
   Box,
+  type ButtonProps,
 } from "@mui/material";
 import { SuccessAddColumn } from "./events/SuccessAddColumn";
 import { useSnackbar } from "notistack";
@@ -25,7 +26,10 @@ type AddColumnAction = {
   tableId: string;
 };
 
-export const AddColumnAction = ({ tableId }: AddColumnAction) => {
+export const AddColumnAction = ({
+  tableId,
+  ...buttonProps
+}: AddColumnAction & ButtonProps) => {
   const { handleSave } = useViewModel();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -93,6 +97,7 @@ export const AddColumnAction = ({ tableId }: AddColumnAction) => {
         startIcon={<AddIcon />}
         sx={{ borderRadius: "8px" }}
         onClick={handleOpenDialog}
+        {...buttonProps}
       >
         Добавить колонку
       </Button>

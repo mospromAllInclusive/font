@@ -1,4 +1,4 @@
-import { useState, type ReactNode, useEffect } from "react";
+import { useState, type ReactNode } from "react";
 import { List, ListItem, ListItemText, ListItemButton } from "@mui/material";
 import { useLifecycles } from "react-use";
 import { useViewModel } from "./hooks/useViewModel";

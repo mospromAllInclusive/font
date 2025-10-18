@@ -8,7 +8,6 @@ import camelcaseKeys from "camelcase-keys";
 class TableService {
   async getTable(tableId: string): Promise<Response<GetTableDataDTO>> {
     try {
-      console.log("tableId ;>> ", tableId);
       const { data } = await network.get(`/tables/${tableId}`);
       return { data: camelcaseKeys(data), error: null };
     } catch (error) {
@@ -69,6 +68,19 @@ class TableService {
       const { data } = await network.post("/tables/delete-column", {
         table_id: tableId,
         column_id: columnId,
+      });
+
+      return { data: camelcaseKeys(data), error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
+
+  async addRow(tableId: string, row: Record<string, unknown>) {
+    try {
+      const { data } = await network.post(`/tables/${tableId}/add-row`, {
+        table_id: tableId,
+        data: row,
       });
 
       return { data: camelcaseKeys(data), error: null };

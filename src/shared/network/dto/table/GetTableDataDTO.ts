@@ -1,4 +1,5 @@
 import type { GetColumnDTO } from "./GetColumnDTO";
+import type { GetRowInfoDTO } from "./GetRowInfoDTO";
 
 export type GetTableDataDTO = {
   table: {
@@ -8,5 +9,5 @@ export type GetTableDataDTO = {
     columns: GetColumnDTO[];
     created_at: "2025-10-17T21:59:20.196521Z";
   };
-  rows: [][];
+  rows: GetRowInfoDTO[];
 };
