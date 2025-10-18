@@ -24,10 +24,23 @@ export const useViewModel = () => {
     return await tableService.setTableCell(tableId, rowId, colId, value);
   };
 
+  const deleteRows = async (tableId: string, rowsIds: (number | string)[]) => {
+    for (const rowId of rowsIds) {
+      const response = await tableService.deleteRow(tableId, rowId);
+
+      if (response.error) {
+        return response;
+      }
+    }
+
+    return { error: null };
+  };
+
   return {
     selectedRowIds,
     fetchTableData,
     handleSetSelectedRows,
     updateTableCell,
+    deleteRows,
   };
 };

@@ -7,18 +7,19 @@ import {
 import { AddRowAction } from "../AddRowAction";
 import { useViewModel } from "./hooks/useViewModel";
 import { useLifecycles } from "react-use";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { SuccessAddRowEvent } from "../AddRowAction";
 import type { GetTableDataDTO } from "@shared/network";
-import type { GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import type { GridColDef, GridRowId, GridRowsProp } from "@mui/x-data-grid";
 import { useSnackbar } from "notistack";
 
 export const TableEditor = ({ tableId }: { tableId: string }) => {
-  const { fetchTableData, updateTableCell } = useViewModel();
+  const { fetchTableData, updateTableCell, deleteRows } = useViewModel();
   const { enqueueSnackbar } = useSnackbar();
 
   const [isLoading, setIsLoading] = useState(false);
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
+  const [selectedRows, setSelectedRows] = useState<Set<GridRowId>>(new Set());
 
   const handleUpdateTableInfo = async () => {
     setIsLoading(true);
@@ -31,6 +32,36 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
     }
 
     setTableInfo(response.data);
+  };
+
+  const handleSelectRows = (selectedSet: Set<GridRowId>) => {
+    setSelectedRows(selectedSet);
+  };
+
+  const handleDeleteRows = async () => {
+    setIsLoading(true);
+
+    const response = await deleteRows(tableId, [...selectedRows]);
+
+    setSelectedRows(new Set());
+
+    setIsLoading(false);
+
+    if (response.error) {
+      enqueueSnackbar("Не все строки были удалены успешно!", {
+        variant: "error",
+      });
+
+      handleUpdateTableInfo();
+
+      return;
+    }
+
+    enqueueSnackbar("Строки успешно удалены!", {
+      variant: "success",
+    });
+
+    handleUpdateTableInfo();
   };
 
   const handleRowUpdate = async (newRowObj: unknown, oldRowObj: unknown) => {
@@ -61,16 +92,15 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
   const gridColumns: GridColDef[] = useMemo(() => {
     if (!tableInfo) return [];
 
-    const columns = tableInfo.table.columns;
-
-    return columns.map((col) => {
+    const columns = tableInfo.table.columns.map((col) => {
       return {
-        name: `${col.name}_${col.id}`,
         field: col.id,
         headerName: col.name,
         editable: true,
       };
     });
+
+    return columns;
   }, [tableInfo]);
 
   const gridRows: GridRowsProp[] = useMemo(() => {
@@ -79,7 +109,10 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
     const record: GridRowsProp[] = [];
 
     tableInfo.rows.forEach((row) => {
-      record.push({ id: row.id, ...row.data } as unknown as GridRowsProp);
+      record.push({
+        id: row.id,
+        ...row.data,
+      } as unknown as GridRowsProp);
     });
 
     return record;
@@ -102,6 +135,11 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       disableRowSelectionOnClick
       showCellVerticalBorder
       showColumnVerticalBorder
+      rowSelection
+      checkboxSelection
+      onRowSelectionModelChange={(select) => {
+        handleSelectRows(select.ids);
+      }}
       processRowUpdate={handleRowUpdate}
       sx={{ width: "100%", borderRadius: "8px" }}
       rows={gridRows}
@@ -110,12 +148,21 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       slots={{
         footer: () => (
           <GridFooterContainer>
-            <Box pl={1}>
+            <Box display="flex" pl={1} gap={2}>
               {gridColumns.length > 0 && (
                 <AddRowAction
                   tableId={tableId}
                   columns={tableInfo?.table.columns || []}
                 />
+              )}
+              {selectedRows.size > 0 && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleDeleteRows}
+                >
+                  Удалить строки
+                </Button>
               )}
             </Box>
 

@@ -89,6 +89,18 @@ class TableService {
     }
   }
 
+  async deleteRow(tableId: string, rowId: string | number) {
+    try {
+      const { data } = await network.post(`/tables/${tableId}/delete-row`, {
+        row_id: rowId,
+      });
+
+      return { data: camelcaseKeys(data), error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
+
   async setTableCell(
     tableId: string,
     rowId: string,
