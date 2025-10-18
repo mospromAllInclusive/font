@@ -4,9 +4,13 @@ import { useLifecycles } from "react-use";
 import { useViewModel } from "./hooks/useViewModel";
 import { SuccessAddColumn } from "../AddColumnAction";
 import { SuccessDeleteColumn } from "../DeleteColumnAction";
+import { SuccessEditColumn } from "../EditColumnAction";
 import type { GetColumnDTO } from "@shared/network";
 import { useTheme } from "@mui/material/styles";
 import { useSnackbar } from "notistack";
+import TextFieldsIcon from "@mui/icons-material/TextFields";
+import Filter1Icon from "@mui/icons-material/Filter1";
+import ListIcon from "@mui/icons-material/List";
 
 type TableColumnListProps = {
   tableId: string;
@@ -45,10 +49,12 @@ export const TableColumnList = ({
 
       window.addEventListener(SuccessAddColumn, handleFetchColumns);
       window.addEventListener(SuccessDeleteColumn, handleFetchColumns);
+      window.addEventListener(SuccessEditColumn, handleFetchColumns);
     },
     () => {
       window.removeEventListener(SuccessAddColumn, handleFetchColumns);
       window.removeEventListener(SuccessDeleteColumn, handleFetchColumns);
+      window.removeEventListener(SuccessEditColumn, handleFetchColumns);
     }
   );
 
@@ -71,8 +77,11 @@ export const TableColumnList = ({
           secondaryAction={itemActionSlot(col)}
         >
           <ListItemButton
-            sx={{ background: palette.grey[200], borderRadius: "8px" }}
+            sx={{ background: palette.grey[200], borderRadius: "8px", gap: 1 }}
           >
+            {col.type === "text" && <TextFieldsIcon />}
+            {col.type === "numeric" && <Filter1Icon />}
+            {col.type === "enum" && <ListIcon />}
             <ListItemText primary={col.name} />
           </ListItemButton>
         </ListItem>

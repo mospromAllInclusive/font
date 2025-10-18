@@ -8,6 +8,7 @@ import {
   AddColumnAction,
   DeleteColumnAction,
   TableColumnList,
+  EditColumnAction,
 } from "@features";
 
 import type { TableMenuPanel } from "@shared/model";
@@ -92,7 +93,10 @@ export const TableWorkArea = () => {
                 key={tableMeta.id}
                 tableId={tableMeta.id}
                 itemActionSlot={(column) => (
-                  <DeleteColumnAction tableId={tableMeta.id} {...column} />
+                  <>
+                    <EditColumnAction tableId={tableMeta.id} {...column} />
+                    <DeleteColumnAction tableId={tableMeta.id} {...column} />
+                  </>
                 )}
               />
             </Box>

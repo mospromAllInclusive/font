@@ -161,6 +161,22 @@ class TableService {
       return { data: null, error: error as AxiosError };
     }
   }
+
+  async editColInfo(
+    tableId: string,
+    col: { id: string; name: string; type: string }
+  ) {
+    try {
+      const { data } = await network.post(`/tables/edit-column`, {
+        table_id: tableId,
+        column: col,
+      });
+
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
 }
 
 export const tableService = new TableService();
