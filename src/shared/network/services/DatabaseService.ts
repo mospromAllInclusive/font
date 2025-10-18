@@ -29,6 +29,22 @@ class DatabaseService {
       return { data: null, error: error as AxiosError };
     }
   }
+
+  async setRole(dbId: string, userId: string, role: string) {
+    try {
+      const { data } = await network.post<{ role: GetRoleDTO }>(
+        `/databases/${dbId}/set-role`,
+        {
+          user_id: Number(userId),
+          role,
+        }
+      );
+
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
 }
 
 export const databaseService = new DatabaseService();

@@ -8,3 +8,4 @@ export type { GetColumnDTO } from "./table/GetColumnDTO";
 export type { GetTableDataDTO } from "./table/GetTableDataDTO";
 export type { GetDbUserInfoDTO } from "./database/GetDbUserInfoDTO";
 export type { GetRoleDTO } from "./GetRoleDTO";
+export type { GetUserDTO } from "./GetUserDTO";

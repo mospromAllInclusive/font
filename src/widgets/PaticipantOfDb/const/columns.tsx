@@ -12,5 +12,8 @@ export const columns: GridColDef[] = [
   {
     field: "role",
     headerName: "Роль",
+    renderCell: () => {
+      return <>HE</>;
+    },
   },
 ];

@@ -1,29 +1,34 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { useViewModel } from "./hooks/useViewModel";
 import { useSnackbar } from "notistack";
-import { DataGrid } from "@mui/x-data-grid";
-import { columns } from "./const/columns";
+import {
+  AddUserAction,
+  SuccessAddUserToDBEvent,
+  ChangeUserRole,
+  SuccessChangeUserRole,
+} from "@features";
+import { List, ListItem, ListItemText, ListItemButton } from "@mui/material";
 import type { GetDbUserInfoDTO } from "@shared/network";
-import type { GridRowsProp } from "@mui/x-data-grid";
 
 export const PaticipantOfDB = () => {
   const { fetchUsersOfDb } = useViewModel();
   const { enqueueSnackbar } = useSnackbar();
+  const { palette } = useTheme();
   const location = useLocation();
 
+  const [dbId, setDbId] = useState<string | null>(null);
   const [userList, setUserList] = useState<GetDbUserInfoDTO[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdateUserList = async () => {
     const dbId = location.pathname.split("/").at(-1);
 
     if (!dbId) return;
 
-    setIsLoading(true);
     const response = await fetchUsersOfDb(dbId);
-    setIsLoading(false);
+
+    setDbId(dbId);
 
     if (response.error) {
       enqueueSnackbar("Не удалось загрузить пользователей таблицы!", {
@@ -35,14 +40,16 @@ export const PaticipantOfDB = () => {
     setUserList(response.data);
   };
 
-  const gridRows: GridRowsProp = useMemo(() => {
-    return userList.map((row) => {
-      return { ...row };
-    });
-  }, [userList]);
-
   useEffect(() => {
     handleUpdateUserList();
+
+    window.addEventListener(SuccessAddUserToDBEvent, handleUpdateUserList);
+    window.addEventListener(SuccessChangeUserRole, handleUpdateUserList);
+
+    return () => {
+      window.removeEventListener(SuccessAddUserToDBEvent, handleUpdateUserList);
+      window.removeEventListener(SuccessChangeUserRole, handleUpdateUserList);
+    };
   }, [location]);
 
   return (
@@ -60,15 +67,44 @@ export const PaticipantOfDB = () => {
         Участники таблицы
       </Typography>
 
-      <Box flex="1" paddingTop={4}>
-        <DataGrid
-          loading={isLoading}
-          showCellVerticalBorder
-          showColumnVerticalBorder
-          columns={columns}
-          rows={gridRows}
-        />
-      </Box>
+      {dbId && (
+        <Box display="flex" gap={2}>
+          <AddUserAction dbId={dbId} />
+        </Box>
+      )}
+
+      <List
+        sx={{
+          width: "100%",
+          display: "flex",
+          flex: "1",
+          overflow: "auto",
+          height: "100%",
+          flexDirection: "column",
+          gap: "8px",
+        }}
+      >
+        {userList.map((user) => (
+          <ListItem key={user.id} sx={{ padding: 0 }}>
+            <ListItemButton
+              sx={{
+                background: palette.grey[200],
+                borderRadius: "8px",
+                gap: 1,
+              }}
+            >
+              <ListItemText primary={user.name} />
+              {dbId && (
+                <ChangeUserRole
+                  dbId={dbId}
+                  userId={String(user.id)}
+                  role={user.role}
+                />
+              )}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
 };

@@ -6,3 +6,5 @@ export * from "./TableEditor";
 export * from "./LogInForm";
 export * from "./AddRowAction";
 export * from "./RegistrationForm";
+export * from "./AddUserAction";
+export * from "./ChangeUserRole";

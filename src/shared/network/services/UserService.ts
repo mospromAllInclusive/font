@@ -16,6 +16,18 @@ export class UserService {
     }
   }
 
+  async getAllUsers() {
+    try {
+      const { data } = await network.get<
+        (GetUserDTO["userInfo"] & { id: string })[]
+      >("/users/list");
+
+      return { data: camelcaseKeys(data), error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
+
   async getUserInfo() {
     try {
       const { data } = await network.get<GetUserDTO["userInfo"]>("/users/info");
