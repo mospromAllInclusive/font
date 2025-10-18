@@ -10,3 +10,5 @@ export type { GetDbUserInfoDTO } from "./database/GetDbUserInfoDTO";
 export type { GetRoleDTO } from "./GetRoleDTO";
 export type { GetUserDTO } from "./GetUserDTO";
 export type { GetChangeItemDTO } from "./changelog/GetChangeItemDTO";
+export type { ChangeRowItemDTO } from "./changelog/GetChangeItemDTO";
+export type { ChangeColumnItem } from "./changelog/GetChangeItemDTO";

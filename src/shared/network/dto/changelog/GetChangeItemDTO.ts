@@ -1,14 +1,14 @@
-type ChangeColumnItem = {
+export type ChangeColumnItem = {
   name: string;
   type: string;
   id: string;
   enum: null | string[];
 };
 
-type ChangeRowItem = {
-  ColumnID: string;
-  ColumnName: string;
-  Value: string;
+export type ChangeRowItemDTO = {
+  columnID: string;
+  columnName: string;
+  value: string;
 };
 
 export type GetChangeItemDTO = {
@@ -17,8 +17,8 @@ export type GetChangeItemDTO = {
   changeType: "add" | "delete" | "update";
   beforeColumn: null | ChangeColumnItem;
   afterColumn: null | ChangeColumnItem;
-  beforeRow: null | ChangeRowItem[];
-  afterRow: null | ChangeRowItem[];
+  beforeRow: null | ChangeRowItemDTO[];
+  afterRow: null | ChangeRowItemDTO[];
   changedAt: string;
   user: {
     id: 1;

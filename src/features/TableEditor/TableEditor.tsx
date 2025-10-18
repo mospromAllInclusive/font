@@ -10,7 +10,6 @@ import { RowsDeleteEvent } from "./events/RowsDeleteEvent";
 import { useRowChange } from "./hooks/useRowChange";
 import { useNavigationMeta } from "./hooks/useNavigationMeta";
 import { TablePaginator } from "@entity";
-import { useManageCell } from "./hooks/useManageCell";
 
 export const TableEditor = ({
   tableId,
@@ -20,7 +19,6 @@ export const TableEditor = ({
   role: GetRoleDTO;
 }) => {
   const { fetchTableData } = useViewModel();
-  const { handleCellSelect } = useManageCell();
 
   const [isLoading, setIsLoading] = useState(false);
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
@@ -91,7 +89,7 @@ export const TableEditor = ({
       onCellEditStart={() => {
         console.log("start");
       }}
-      onCellClick={handleCellSelect}
+      // onCellClick={handleCellSelect}
       checkboxSelection={possibleEditTable}
       onFilterModelChange={(model) => {
         const filterItem = model.items[0];

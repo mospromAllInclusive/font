@@ -28,9 +28,6 @@ export const useManageCell = () => {
     cellElement.onblur = () => {
       console.log("blur");
     };
-
-    console.log("gridCellParams :>> ", gridCellParams);
-    console.log("event :>> ", event);
   };
 
   return { handleCellSelect };

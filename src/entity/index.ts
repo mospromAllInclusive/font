@@ -6,3 +6,5 @@ export * from "./Background";
 export * from "./TablePaginator";
 export * from "./FilterPanel";
 export * from "./EnumEditor";
+export * from "./ChangeDiagram";
+export * from "./ChangeDiagram";
