@@ -30,8 +30,6 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
 
   const { gridColumns, gridRows } = useTableGrid(tableInfo);
 
-  // console.log("gridColumns :>> ", gridColumns);
-
   const {
     selectedRows,
     handleDeleteRows: deleteRows,
@@ -41,7 +39,10 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
 
   const handleUpdateTableInfo = async () => {
     setIsLoading(true);
-    const response = await fetchTableData(tableId, paginationMeta, sortMeta);
+    const response = await fetchTableData(tableId, paginationMeta, sortMeta, {
+      filterCol,
+      filterText,
+    });
     setIsLoading(false);
 
     if (response.error) {
@@ -68,7 +69,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       window.removeEventListener(SuccessAddRowEvent, handleUpdateTableInfo);
       window.removeEventListener(RowsDeleteEvent, handleUpdateTableInfo);
     };
-  }, [paginationMeta, sortMeta, filterText, filterCol]);
+  }, [paginationMeta, sortMeta, filterText]);
 
   return (
     <DataGrid
@@ -77,6 +78,7 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
       showCellVerticalBorder
       showColumnVerticalBorder
       rowSelection
+      filterDebounceMs={300}
       checkboxSelection
       onFilterModelChange={(model) => {
         const filterItem = model.items[0];
@@ -108,16 +110,12 @@ export const TableEditor = ({ tableId }: { tableId: string }) => {
         outliersFactor: 1.5,
         expand: true,
       }}
+      slotProps={{
+        filterPanel: {
+          disableAddFilterButton: true,
+        },
+      }}
       slots={{
-        // filterPanel: () => (
-        //   <FilterPanel
-        //     currentColumn={filterCol}
-        //     filterText={filterText}
-        //     onChangeColumn={setFilterCol}
-        //     onChangeFilterText={setFilterText}
-        //     columns={tableInfo?.table.columns || []}
-        //   />
-        // ),
         footer: () => (
           <GridFooterContainer>
             <Box display="flex" pl={1} gap={2}>
