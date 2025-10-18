@@ -1,5 +1,6 @@
 import { useState, type ReactNode, useEffect } from "react";
 import { List, ListItem, ListItemText, ListItemButton } from "@mui/material";
+import { useLifecycles } from "react-use";
 import { useViewModel } from "./hooks/useViewModel";
 import { SuccessAddColumn } from "../AddColumnAction";
 import { SuccessDeleteColumn } from "../DeleteColumnAction";
@@ -10,7 +11,6 @@ import { useSnackbar } from "notistack";
 type TableColumnListProps = {
   tableId: string;
   itemActionSlot: (column: GetColumnDTO) => ReactNode;
-  defaultColumns: GetColumnDTO[];
 };
 
 export const TableColumnList = ({
@@ -39,17 +39,18 @@ export const TableColumnList = ({
     setColumns(tableMeta.columns);
   };
 
-  useEffect(() => {
-    handleFetchColumns();
+  useLifecycles(
+    () => {
+      handleFetchColumns();
 
-    window.addEventListener(SuccessAddColumn, handleFetchColumns);
-    window.addEventListener(SuccessDeleteColumn, handleFetchColumns);
-
-    return () => {
+      window.addEventListener(SuccessAddColumn, handleFetchColumns);
+      window.addEventListener(SuccessDeleteColumn, handleFetchColumns);
+    },
+    () => {
       window.removeEventListener(SuccessAddColumn, handleFetchColumns);
       window.removeEventListener(SuccessDeleteColumn, handleFetchColumns);
-    };
-  }, []);
+    }
+  );
 
   return (
     <List

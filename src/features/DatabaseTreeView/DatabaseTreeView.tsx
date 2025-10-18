@@ -8,6 +8,7 @@ import { SuccessAddTable } from "../TableTreeItems";
 import { TableTreeItems } from "../TableTreeItems";
 import { useHistory } from "react-router-dom";
 import type { GetTreeDatabaseDTO } from "@shared/network";
+import { SuccessDeleteTable } from "../TableTreeItem/events/SuccessDeleteTable";
 
 export const DatabaseTreeView = () => {
   const { getTree, handleAddDatabase } = useViewModel();
@@ -34,12 +35,15 @@ export const DatabaseTreeView = () => {
   useLifecycles(
     () => {
       handleUpdateTree();
+
       window.addEventListener(SuccessAddDb, handleUpdateTree);
       window.addEventListener(SuccessAddTable, handleUpdateTree);
+      window.addEventListener(SuccessDeleteTable, handleUpdateTree);
     },
     () => {
       window.removeEventListener(SuccessAddDb, handleUpdateTree);
       window.removeEventListener(SuccessAddTable, handleUpdateTree);
+      window.removeEventListener(SuccessDeleteTable, handleUpdateTree);
     }
   );
 

@@ -39,6 +39,18 @@ class TableService {
     }
   }
 
+  async deleteTable(tableId: string) {
+    try {
+      const { data } = await network.post(`/tables/delete`, {
+        table_id: tableId,
+      });
+
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: error as AxiosError };
+    }
+  }
+
   async createColumn(tableId: string, column: { name: string; type: string }) {
     try {
       const { data } = await network.post(`/tables/add-column`, {

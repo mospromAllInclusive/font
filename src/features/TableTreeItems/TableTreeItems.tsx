@@ -5,7 +5,7 @@ import {
   CreateTableButton,
   type CrateTableButtonProps,
 } from "@entity";
-import { TreeItem } from "@shared";
+import { TableTreeItem } from "../TableTreeItem/TableTreeItem";
 import {
   Dialog,
   DialogTitle,
@@ -13,7 +13,6 @@ import {
   TextField,
   Box,
   Button,
-  DialogActions,
 } from "@mui/material";
 import { useViewModel } from "./hooks/useViewModel";
 import { SuccessAddTable } from "./events/SuccessAddTable";
@@ -85,11 +84,7 @@ export const TableTreeItems = ({ dbId, tables }: TableTreeItemsProps) => {
         onAddEntity={handleOpenDialog}
       >
         {tables.map((table) => (
-          <TreeItem
-            key={`/table-item/${table.id}`}
-            itemId={`/table-item/${table.id}`}
-            label={table.name}
-          />
+          <TableTreeItem tableId={table.id} tableName={table.name} />
         ))}
       </DBTreeItem>
 

@@ -14,6 +14,7 @@ export const TableColumnsEditor = ({
       display="flex"
       alignItems="flex-start"
       flexDirection="column"
+      gap={2}
       {...boxProps}
     >
       <AddColumnAction tableId={tableId} />

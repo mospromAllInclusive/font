@@ -76,13 +76,17 @@ export const TableWorkArea = () => {
           )}
 
           {activePanel === "columns" && (
-            <Box display="flex" alignItems="flex-start" flexDirection="column">
+            <Box
+              display="flex"
+              alignItems="flex-start"
+              flexDirection="column"
+              marginTop="10px"
+            >
               <AddColumnAction tableId={tableMeta.id} />
 
               <TableColumnList
                 key={tableMeta.id}
                 tableId={tableMeta.id}
-                defaultColumns={tableMeta.columns}
                 itemActionSlot={(column) => (
                   <DeleteColumnAction tableId={tableMeta.id} {...column} />
                 )}
