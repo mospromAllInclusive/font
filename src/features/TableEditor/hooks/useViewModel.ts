@@ -1,7 +1,7 @@
 import type { GridRowId } from "@mui/x-data-grid";
 import { tableActions } from "@shared/model";
 import { useAppDispatch, useAppSelector } from "@shared/model";
-import { tableService } from "@shared/network";
+import { tableService, eventService } from "@shared/network";
 import type { PaginationMeta, SortMeta } from "./useNavigationMeta";
 
 export const useViewModel = () => {
@@ -42,11 +42,21 @@ export const useViewModel = () => {
     return { error: null };
   };
 
+  const handleCellFocus = (tableId: string, rowId: string, colId: string) => {
+    eventService.setCellBusy(tableId, rowId, colId);
+  };
+
+  const handleCellFree = (tableId: string, rowId: string, colId: string) => {
+    eventService.setCellFree(tableId, rowId, colId);
+  };
+
   return {
     selectedRowIds,
     fetchTableData,
     handleSetSelectedRows,
     updateTableCell,
     deleteRows,
+    handleCellFocus,
+    handleCellFree,
   };
 };

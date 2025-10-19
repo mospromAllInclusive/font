@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
-import { DataGrid, GridFooterContainer } from "@mui/x-data-grid";
+import { useState, useEffect, type MouseEvent } from "react";
+import {
+  DataGrid,
+  GridFooterContainer,
+  type GridCellParams,
+} from "@mui/x-data-grid";
 import { AddRowAction } from "../AddRowAction";
 import { useViewModel } from "./hooks/useViewModel";
 import { Box, Button } from "@mui/material";
@@ -20,7 +24,7 @@ export const TableEditor = ({
   tableId: string;
   role: GetRoleDTO;
 }) => {
-  const { fetchTableData } = useViewModel();
+  const { fetchTableData, handleCellFocus, handleCellFree } = useViewModel();
 
   const apiGrid = useWebSocket(tableId);
 
@@ -63,6 +67,28 @@ export const TableEditor = ({
     setTableInfo(response.data);
   };
 
+  const handleCellClick = (
+    cell: GridCellParams,
+    event: MouseEvent<HTMLElement>
+  ) => {
+    handleCellFocus(tableId, String(cell.id), cell.field);
+
+    window.dispatchEvent(
+      new CustomEvent(CellSelectEvent, {
+        detail: {
+          id: cell.id,
+          field: cell.field,
+        },
+      })
+    );
+
+    const cellElem = event.target as HTMLDivElement;
+
+    cellElem.onblur = () => {
+      handleCellFree(tableId, String(cell.id), cell.field);
+    };
+  };
+
   const handleDeleteRows = async () => {
     setIsLoading(true);
     await deleteRows();
@@ -91,16 +117,7 @@ export const TableEditor = ({
       showCellVerticalBorder
       showColumnVerticalBorder
       filterDebounceMs={300}
-      onCellClick={(cell) => {
-        window.dispatchEvent(
-          new CustomEvent(CellSelectEvent, {
-            detail: {
-              id: cell.id,
-              field: cell.field,
-            },
-          })
-        );
-      }}
+      onCellClick={handleCellClick}
       checkboxSelection={possibleEditTable}
       onFilterModelChange={(model) => {
         const filterItem = model.items[0];
