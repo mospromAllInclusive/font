@@ -27,6 +27,12 @@ export default defineConfig({
           return path.replace(/^\/api/, "");
         },
       },
+      "/ws": {
+        target: "https://server.simple-table.ru",
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
     },
   },
 });

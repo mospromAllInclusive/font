@@ -11,6 +11,7 @@ import { useRowChange } from "./hooks/useRowChange";
 import { useNavigationMeta } from "./hooks/useNavigationMeta";
 import { TablePaginator } from "@entity";
 import { CellSelectEvent } from "./events/CellSelectEvent";
+import { useWebSocket } from "./hooks/useWebSocket";
 
 export const TableEditor = ({
   tableId,
@@ -20,6 +21,8 @@ export const TableEditor = ({
   role: GetRoleDTO;
 }) => {
   const { fetchTableData } = useViewModel();
+
+  const apiGrid = useWebSocket(tableId);
 
   const [isLoading, setIsLoading] = useState(false);
   const [tableInfo, setTableInfo] = useState<GetTableDataDTO | null>(null);
@@ -82,14 +85,12 @@ export const TableEditor = ({
 
   return (
     <DataGrid
+      apiRef={apiGrid}
       autosizeOnMount
       disableRowSelectionOnClick
       showCellVerticalBorder
       showColumnVerticalBorder
       filterDebounceMs={300}
-      onCellEditStart={() => {
-        console.log("start");
-      }}
       onCellClick={(cell) => {
         window.dispatchEvent(
           new CustomEvent(CellSelectEvent, {
