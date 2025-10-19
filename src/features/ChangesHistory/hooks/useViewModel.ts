@@ -5,5 +5,13 @@ export const useViewModel = () => {
     return await changeLogService.getTableChanges(tableId);
   };
 
-  return { fetchTableHistory };
+  const fetchCellHistory = async (
+    tableId: string,
+    colId: string,
+    rowId: string
+  ) => {
+    return await changeLogService.getCellChanges(tableId, colId, rowId);
+  };
+
+  return { fetchTableHistory, fetchCellHistory };
 };

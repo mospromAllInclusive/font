@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
 import { TableHistory } from "./ui/TableHistory";
+import { CellHistory } from "./ui/CellHistory";
 
 export const ChangesHistory = ({ tableId }: { tableId: string }) => {
   const [tab, setTab] = useState<number>(0);
@@ -36,7 +37,8 @@ export const ChangesHistory = ({ tableId }: { tableId: string }) => {
         <Tab label="Ячейка" />
       </Tabs>
 
-      <TableHistory tableId={tableId} />
+      {tab === 0 && <TableHistory tableId={tableId} />}
+      {tab === 1 && <CellHistory tableId={tableId} />}
     </Box>
   );
 };

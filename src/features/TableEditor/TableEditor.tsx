@@ -10,6 +10,7 @@ import { RowsDeleteEvent } from "./events/RowsDeleteEvent";
 import { useRowChange } from "./hooks/useRowChange";
 import { useNavigationMeta } from "./hooks/useNavigationMeta";
 import { TablePaginator } from "@entity";
+import { CellSelectEvent } from "./events/CellSelectEvent";
 
 export const TableEditor = ({
   tableId,
@@ -89,7 +90,16 @@ export const TableEditor = ({
       onCellEditStart={() => {
         console.log("start");
       }}
-      // onCellClick={handleCellSelect}
+      onCellClick={(cell) => {
+        window.dispatchEvent(
+          new CustomEvent(CellSelectEvent, {
+            detail: {
+              id: cell.id,
+              field: cell.field,
+            },
+          })
+        );
+      }}
       checkboxSelection={possibleEditTable}
       onFilterModelChange={(model) => {
         const filterItem = model.items[0];
