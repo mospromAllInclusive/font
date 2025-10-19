@@ -41,13 +41,17 @@ export const useWebSocket = (tableId: string) => {
   };
 
   const handleMount = () => {
-    const ws = new WebSocket(
-      `${SOCKET_CONNECTION_URL}/tables?topic=${tableId}`
-    );
+    try {
+      const ws = new WebSocket(
+        `${SOCKET_CONNECTION_URL}/tables?topic=${tableId}`
+      );
 
-    ws.addEventListener("message", handleMessage);
+      ws.addEventListener("message", handleMessage);
 
-    socketRef.current = ws;
+      socketRef.current = ws;
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useLifecycles(
