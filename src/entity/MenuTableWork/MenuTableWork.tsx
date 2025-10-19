@@ -4,12 +4,14 @@ import { MdViewColumn } from "react-icons/md";
 import { MenuTab } from "./ui/MenuTab";
 import type { TableMenuPanel } from "@shared/model";
 import RestorePageIcon from "@mui/icons-material/RestorePage";
+import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 
 export type MenuTableWorkProps = {
   activeHistoryMenu: boolean;
   activeValue: TableMenuPanel;
   onSelectTab: (value: TableMenuPanel) => void;
   onToggleMenuHistory: () => void;
+  onExcelDownload: () => void;
 };
 
 export const MenuTableWork = ({
@@ -17,6 +19,7 @@ export const MenuTableWork = ({
   activeValue,
   onSelectTab,
   onToggleMenuHistory,
+  onExcelDownload,
 }: MenuTableWorkProps) => {
   return (
     <Box
@@ -50,6 +53,13 @@ export const MenuTableWork = ({
         onClick={onToggleMenuHistory}
       >
         История изменений
+      </MenuTab>
+
+      <MenuTab
+        startIcon={<PiMicrosoftExcelLogoFill />}
+        onClick={onExcelDownload}
+      >
+        Выгрузка в excel
       </MenuTab>
     </Box>
   );

@@ -24,6 +24,7 @@ export const TableWorkArea = () => {
     setTableMenuActivePanel,
     checkRole,
     handleTogleMenuHistory,
+    handleDownload,
   } = useViewModel();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -89,6 +90,7 @@ export const TableWorkArea = () => {
           activeValue={activePanel}
           onSelectTab={handleSelectTab}
           onToggleMenuHistory={handleTogleMenuHistory}
+          onExcelDownload={() => handleDownload(tableMeta?.id)}
         />
       </Box>
 

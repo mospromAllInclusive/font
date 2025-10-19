@@ -4,6 +4,7 @@ import { SOCKET_CONNECTION_URL } from "@shared/network";
 import { useGridApiRef } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material";
 import { useAppSelector } from "@shared/model";
+import { SuccessAddRowEvent } from "@features";
 
 export const useWebSocket = (tableId: string) => {
   const userEmail = useAppSelector((state) => state.userInfo.user?.email);
@@ -73,6 +74,10 @@ export const useWebSocket = (tableId: string) => {
       const data = JSON.parse(e.data);
 
       const eventAction = data.eventAction;
+
+      if (eventAction === "fetch_table") {
+        window.dispatchEvent(new Event(SuccessAddRowEvent));
+      }
 
       if (eventAction === "set_cell_free") {
         const colId = data.payload.column_id as string;

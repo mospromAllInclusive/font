@@ -177,6 +177,22 @@ class TableService {
       return { data: null, error: error as AxiosError };
     }
   }
+
+  async getExport(id: string) {
+    try {
+      const response = await network.get(`/tables/${id}/export`, {
+        responseType: "arraybuffer",
+      });
+
+      const blob = new Blob([response.data], {
+        type: "application/octet-stream",
+      });
+
+      return { data: blob, error: null };
+    } catch (e) {
+      return { data: null, error: e as AxiosError };
+    }
+  }
 }
 
 export const tableService = new TableService();

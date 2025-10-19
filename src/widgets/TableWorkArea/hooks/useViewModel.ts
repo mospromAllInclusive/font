@@ -19,7 +19,6 @@ export const useViewModel = () => {
   };
 
   const setTableMenuActivePanel = (panel: TableMenuPanel) => {
-    console.log("panel :>> ", panel);
     dispath(tableMenuActions.setActivePanel(panel));
   };
 
@@ -36,6 +35,23 @@ export const useViewModel = () => {
     dispath(historyMenuActions.setActive(true));
   };
 
+  const handleDownload = async (tableId?: string) => {
+    if (!tableId) return;
+
+    const response = await tableService.getExport(String(tableId));
+
+    if (response.data) {
+      const blob = response.data;
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${new Date().toISOString()}.xlsx`;
+      link.click();
+    }
+  };
+
   return {
     isActiveMenuHistory,
     activePanel,
@@ -43,5 +59,6 @@ export const useViewModel = () => {
     checkRole,
     setTableMenuActivePanel,
     handleTogleMenuHistory,
+    handleDownload,
   };
 };
