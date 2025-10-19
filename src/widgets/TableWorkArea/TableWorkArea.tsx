@@ -111,41 +111,45 @@ export const TableWorkArea = () => {
               </Box>
             )}
 
+            {activePanel === "columns" && (
+              <Box
+                display="flex"
+                alignItems="flex-start"
+                flexDirection="column"
+                marginTop="10px"
+                flex={1}
+                overflow="auto"
+              >
+                {role === "admin" && (
+                  <EditColumnAction tableId={tableMeta.id} view="CREATE" />
+                )}
+
+                <TableColumnList
+                  key={tableMeta.id}
+                  tableId={tableMeta.id}
+                  itemActionSlot={(column) => (
+                    <>
+                      {role === "admin" && (
+                        <EditColumnAction
+                          view="EDIT"
+                          tableId={tableMeta.id}
+                          {...column}
+                        />
+                      )}
+                      {role === "admin" && (
+                        <DeleteColumnAction
+                          tableId={tableMeta.id}
+                          {...column}
+                        />
+                      )}
+                    </>
+                  )}
+                />
+              </Box>
+            )}
+
             {isActiveMenuHistory && <ChangesHistory tableId={tableMeta.id} />}
           </Box>
-
-          {activePanel === "columns" && (
-            <Box
-              display="flex"
-              alignItems="flex-start"
-              flexDirection="column"
-              marginTop="10px"
-              overflow="auto"
-            >
-              {role === "admin" && (
-                <EditColumnAction tableId={tableMeta.id} view="CREATE" />
-              )}
-
-              <TableColumnList
-                key={tableMeta.id}
-                tableId={tableMeta.id}
-                itemActionSlot={(column) => (
-                  <>
-                    {role === "admin" && (
-                      <EditColumnAction
-                        view="EDIT"
-                        tableId={tableMeta.id}
-                        {...column}
-                      />
-                    )}
-                    {role === "admin" && (
-                      <DeleteColumnAction tableId={tableMeta.id} {...column} />
-                    )}
-                  </>
-                )}
-              />
-            </Box>
-          )}
         </>
       )}
     </Box>
