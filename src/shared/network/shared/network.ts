@@ -15,7 +15,7 @@ const getBaseUrls = (): { BASE_URL: string; SOCKET_URL: string } => {
 
     return {
       BASE_URL: "https://server.simple-table.ru",
-      SOCKET_URL: "ws://server.simple-table.ru/ws",
+      SOCKET_URL: "wss://server.simple-table.ru/ws",
     };
   }
 
