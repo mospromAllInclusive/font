@@ -20,7 +20,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://server.simple-table.ru",
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => {
@@ -28,7 +28,7 @@ export default defineConfig({
         },
       },
       "/ws": {
-        target: "https://server.simple-table.ru",
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
         ws: true,
