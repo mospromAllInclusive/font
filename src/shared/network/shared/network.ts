@@ -21,7 +21,7 @@ const getBaseUrls = (): { BASE_URL: string; SOCKET_URL: string } => {
 
   return {
     BASE_URL: "/api",
-    SOCKET_URL: "ws://localhost:5173/ws",
+    SOCKET_URL: "/ws",
   };
 };
 
