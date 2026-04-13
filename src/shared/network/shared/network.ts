@@ -9,7 +9,7 @@ const getBaseUrls = (): { BASE_URL: string; SOCKET_URL: string } => {
     if (location.hostname === "localhost") {
       return {
         BASE_URL: "http://localhost:8080",
-        SOCKET_URL: "ws://localhost:5173/ws",
+        SOCKET_URL: "ws://localhost:8080/ws",
       };
     }
 
